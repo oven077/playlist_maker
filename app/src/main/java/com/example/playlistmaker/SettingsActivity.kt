@@ -1,11 +1,14 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatDelegate
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,6 +16,21 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener() {
             finish()
+        }
+
+        val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val isDarkThemeEnabled = preferences.getBoolean(KEY_DARK_THEME, false)
+
+        val darkThemeSwitch = findViewById<Switch>(R.id.switch_dark_theme)
+        darkThemeSwitch.isChecked = isDarkThemeEnabled
+        darkThemeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val mode = if (isChecked) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+            AppCompatDelegate.setDefaultNightMode(mode)
+            preferences.edit().putBoolean(KEY_DARK_THEME, isChecked).apply()
         }
 
         findViewById<Button>(R.id.button_sharing).setOnClickListener() {
@@ -36,5 +54,9 @@ class SettingsActivity : AppCompatActivity() {
             intent.data = Uri.parse(getString(R.string.support_user_agreement))
             startActivity(Intent.createChooser(intent, null))
         }
+    }
+    companion object {
+        private const val PREFS_NAME = "app_preferences"
+        private const val KEY_DARK_THEME = "dark_theme"
     }
 }

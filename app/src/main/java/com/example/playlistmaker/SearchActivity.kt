@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
-import com.example.playlistmaker.R
 
 class SearchActivity : AppCompatActivity() {
 
