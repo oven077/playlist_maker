@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="MainBtn" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/btn_height</item>
@@ -30,6 +29,8 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:gravity">start</item>
+        <item name="android:paddingVertical">@dimen/padding_21</item>
+        <item name="android:paddingHorizontal">@dimen/padding_16</item>
         <item name="iconGravity">end</item>
         <item name="iconTint">@color/settings_icon_color</item>
         <item name="android:backgroundTint">@color/settings_button_background_color</item>
