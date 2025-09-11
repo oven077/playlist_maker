@@ -1,4 +1,4 @@
-package com.sakal.playlistmaker.model
+package com.example.playlistmaker.model
 
 data class Track(
     val trackName: String,

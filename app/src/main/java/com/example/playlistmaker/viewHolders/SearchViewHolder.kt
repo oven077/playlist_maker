@@ -1,12 +1,12 @@
-package com.sakal.playlistmaker.viewHolders
+package com.example.playlistmaker.viewHolders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.sakal.playlistmaker.R
-import com.sakal.playlistmaker.model.Track
-import com.sakal.playlistmaker.databinding.ItemSearchRecyclerBinding
+import com.example.playlistmaker.R
+import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.databinding.ItemSearchRecyclerBinding
 
 
 class SearchViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {

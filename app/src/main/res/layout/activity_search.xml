@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/settings_screen_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/settings_screen_background">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/search_toolbar"
@@ -23,7 +23,6 @@
             android:textColor="@color/settings_text_color"
             android:textFontWeight="500"
             android:textSize="@dimen/text_size_22" />
-
     </com.google.android.material.appbar.MaterialToolbar>
 
     <FrameLayout
@@ -58,9 +57,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginStart="@dimen/margin_16"
             android:padding="12dp"
             android:src="@drawable/clear"
             app:tint="@color/search_form_text_hint_color" />
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/margin_24"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/item_search_recycler" />
+
 </LinearLayout>

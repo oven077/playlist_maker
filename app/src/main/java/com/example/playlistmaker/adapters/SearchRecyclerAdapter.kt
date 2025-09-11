@@ -1,11 +1,11 @@
-package com.sakal.playlistmaker.adapters
+package com.example.playlistmaker.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sakal.playlistmaker.R
-import com.sakal.playlistmaker.model.Track
-import com.sakal.playlistmaker.viewHolders.SearchViewHolder
+import com.example.playlistmaker.R
+import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.viewHolders.SearchViewHolder
 
 class SearchRecyclerAdapter(private val items: ArrayList<Track>) : RecyclerView.Adapter<SearchViewHolder>() {
 

@@ -5,9 +5,34 @@
       <config />
     </shared>
     <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ellipse.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/icon_text.xml">
         <config>
           <theme>@style/Theme.MaterialComponents.DayNight.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/icon_text_1.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/icon_text_2.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/light_mode.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/track_icon.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_library.xml">
@@ -30,6 +55,11 @@
           <theme>@style/Theme.MaterialComponents.DayNight.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_search_recycler.xml">
+        <config>
+          <theme>@style/Theme.PlaylistMaker</theme>
+        </config>
+      </layout>
     </layouts>
   </component>
   <component name="AutoImportSettings">
@@ -37,10 +67,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c17c29e7-f693-47c5-b1f9-c36064614b50" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/app/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/SearchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/SearchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/adapters/SearchRecyclerAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/adapters/SearchRecyclerAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/model/Track.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/model/Track.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/viewHolders/SearchViewHolder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlistmaker/viewHolders/SearchViewHolder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_search.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-night/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-night/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +90,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\agermolin\.android\avd\Pixel.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\agermolin\.android\avd\Nexus_One_API_28.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -101,6 +140,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Android App.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -109,17 +149,17 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "com.google.services.firebase.aqiPopupShown": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/RecyclerView",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/agermolin/AndroidStudioProjects/PlaylistMaker2/app/src/main/java/com/example/playlistmaker",
+    "last_opened_file_path": "C:/Users/agermolin/AndroidStudioProjects/PlaylistMaker2/app/src/main/res/drawable",
     "settings.editor.selected.configurable": "AndroidSdkUpdater"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\res\drawable" />
       <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\java\com\example\playlistmaker" />
       <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\res\layout" />
-      <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\res\drawable" />
       <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\res" />
       <recent name="C:\Users\agermolin\AndroidStudioProjects\PlaylistMaker2\app\src\main\res\values" />
     </key>
@@ -228,12 +268,12 @@
       <map>
         <entry key="com.example.playlistmaker">
           <value>
-            <CheckInfo lastCheckTimestamp="1756132958042" />
+            <CheckInfo lastCheckTimestamp="1757591411936" />
           </value>
         </entry>
         <entry key="com.example.playlistmaker.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1756132958033" />
+            <CheckInfo lastCheckTimestamp="1757591411937" />
           </value>
         </entry>
       </map>
