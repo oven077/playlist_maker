@@ -1,1 +1,50 @@
-/build
+# Gradle
+.gradle/
+build/
+*/build/
+!gradle-wrapper.jar
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Keystore files (никогда не коммить!)
+*.jks
+*.keystore
+
+# Android
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+outputs/
+generated/
+
+# Log files
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Kotlin/Java
+out/
+
+# Unit test reports
+/test-results/
+/reports/
+
+# NDK
+obj/
+
+# Backup & temp
+*.swp
+*.tmp
+*.bak
+*.orig
+*.rej
+
+# Ignore Google Services (можно хранить отдельно)
+google-services.json
