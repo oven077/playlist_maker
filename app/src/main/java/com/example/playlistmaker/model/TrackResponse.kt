@@ -1,4 +1,4 @@
-package com.sakal.playlistmaker.model
+package com.example.playlistmaker.model
 
 class TrackResponse(
     val resultCount: Int,
