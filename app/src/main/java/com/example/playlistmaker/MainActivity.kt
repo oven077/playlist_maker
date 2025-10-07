@@ -48,9 +48,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
     companion object {
         private const val TAG = "asd"
         private const val PREFS_NAME = "app_preferences"

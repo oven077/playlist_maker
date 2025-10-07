@@ -1,4 +1,4 @@
-package com.sakal.playlistmaker.model
+package com.example.playlistmaker.model
 
 object ApiConstants {
     const val BASE_URL = "https://itunes.apple.com/"

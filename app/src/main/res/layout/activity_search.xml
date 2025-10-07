@@ -59,7 +59,8 @@
             android:layout_gravity="end"
             android:padding="12dp"
             android:src="@drawable/clear"
-            app:tint="@color/search_form_text_hint_color" />
+            app:tint="@color/search_form_text_hint_color"
+            android:visibility="invisible" />
 
     </FrameLayout>
 
