@@ -28,6 +28,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.jvm.java
 
+import com.example.playlistmaker.adapters.SearchHistoryAdapter
+import com.example.playlistmaker.manager.SearchHistoryManager
+
 class SearchActivity : AppCompatActivity() {
 
     companion object {
@@ -71,19 +74,27 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var buttonRetry: Button
 
+    // История поиска
+    private lateinit var searchHistoryManager: SearchHistoryManager
+    private lateinit var searchHistoryContainer: LinearLayout
+    private lateinit var historyRecyclerView: RecyclerView
+    private lateinit var clearHistoryButton: TextView
+    private lateinit var historyAdapter: SearchHistoryAdapter
+    private val historyTracks = ArrayList<Track>()
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        initSearchHistory()
         initRecycler(tracks)
-
         retry()
-
         initToolbar()
-
         initSearch()
-
         inputText()
 
 
@@ -141,22 +152,37 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 searchClearIcon.visibility = searchClearIconVisibility(s)
                 textSearch = searchEditText.text.toString()
+
+                // Показываем/скрываем историю в зависимости от содержимого поля
+                updateSearchHistoryVisibility()
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
         searchEditText.addTextChangedListener(simpleTextWatcher)
+
+        // Добавляем обработчик фокуса
+        searchEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                updateSearchHistoryVisibility()
+            } else {
+                // Скрываем историю при потере фокуса
+                searchHistoryContainer.visibility = View.GONE
+            }
+        }
     }
 
 
     private fun initRecycler(tracks: ArrayList<Track>) {
-
         recyclerView = findViewById(R.id.recycler_view)
-        searchAdapter = SearchRecyclerAdapter(tracks)
+        searchAdapter = SearchRecyclerAdapter(tracks) { track ->
+            // Обработка клика по треку в результатах поиска
+            addTrackToHistory(track)
+            // Скрываем результаты поиска после добавления в историю
+            recyclerView.visibility = View.GONE
+        }
         recyclerView.adapter = searchAdapter
-
-
     }
 
     private fun searchClearIconVisibility(s: CharSequence?): Int {
@@ -167,16 +193,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun clearSearchForm() {
-        searchInput.setText("")
-
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -198,6 +214,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun getTrack() {
+
+        // Скрываем историю при поиске
+        searchHistoryContainer.visibility = View.GONE
+
         serviceSearch.searchTrack(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -223,6 +243,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showPlaceholder(placeholder: PlaceHolder) {
 
+        searchHistoryContainer.visibility = View.GONE
         placeholderNothingWasFound = findViewById(R.id.placeholderNothingWasFound)
         placeholderCommunicationsProblem = findViewById(R.id.placeholderCommunicationsProblem)
 
@@ -246,7 +267,65 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
+    private fun initSearchHistory() {
+        searchHistoryManager = SearchHistoryManager(this)
+        searchHistoryContainer = findViewById(R.id.search_history_container)
+        historyRecyclerView = findViewById(R.id.history_recycler_view)
+        clearHistoryButton = findViewById(R.id.clear_history_button)
 
+        // Инициализируем адаптер истории
+        historyAdapter = SearchHistoryAdapter(historyTracks) { track ->
+            // При клике на трек из истории - только заполняем поле поиска
+            searchEditText.setText(track.trackName)
+            searchEditText.setSelection(searchEditText.text.length)
+            // НЕ добавляем в историю повторно
+        }
+        historyRecyclerView.adapter = historyAdapter
+
+        // Обработчик кнопки очистки истории
+        clearHistoryButton.setOnClickListener {
+            searchHistoryManager.clearSearchHistory()
+            updateSearchHistoryDisplay()
+        }
+
+        // Загружаем историю при инициализации
+        updateSearchHistoryDisplay()
+    }
+
+    private fun updateSearchHistoryDisplay() {
+        val history = searchHistoryManager.getSearchHistory()
+        historyTracks.clear()
+        historyTracks.addAll(history)
+        historyAdapter.notifyDataSetChanged()
+
+        // Показываем/скрываем контейнер истории в зависимости от наличия данных
+        if (history.isNotEmpty()) {
+            searchHistoryContainer.visibility = View.VISIBLE
+        } else {
+            searchHistoryContainer.visibility = View.GONE
+        }
+    }
+
+    private fun addTrackToHistory(track: Track) {
+        searchHistoryManager.addTrackToHistory(track)
+        updateSearchHistoryDisplay()
+    }
+
+    private fun updateSearchHistoryVisibility() {
+        val isSearchEmpty = searchEditText.text.toString().isEmpty()
+        val hasHistory = searchHistoryManager.hasSearchHistory()
+
+        if (isSearchEmpty && hasHistory) {
+            // Показываем ТОЛЬКО историю
+            searchHistoryContainer.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+            placeholderNothingWasFound.visibility = View.GONE
+            placeholderCommunicationsProblem.visibility = View.GONE
+        } else {
+            // Скрываем историю
+            searchHistoryContainer.visibility = View.GONE
+        }
+    }
 
 
 }
