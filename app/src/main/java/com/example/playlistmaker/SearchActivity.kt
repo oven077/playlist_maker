@@ -137,11 +137,9 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler(tracks: ArrayList<Track>) {
         searchAdapter = SearchRecyclerAdapter(tracks) { track ->
             addTrackToHistory(track)
-            recyclerView.visibility = View.GONE
         }
         recyclerView.adapter = searchAdapter
     }
-
     private fun retry() {
         buttonRetry.setOnClickListener {
             getTrack()
@@ -194,9 +192,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun initSearchHistory() {
         searchHistoryManager = SearchHistoryManager(this)
-        searchHistoryContainer = findViewById(R.id.search_history_container)
-        historyRecyclerView = findViewById(R.id.history_recycler_view)
-        clearHistoryButton = findViewById(R.id.clear_history_button)
+        searchHistoryContainer = findViewById(R.id.history_list)
+        historyRecyclerView = findViewById(R.id.recyclerViewHistory)
+        clearHistoryButton = findViewById(R.id.button_clear_history)
 
         historyAdapter = SearchHistoryAdapter(historyTracks) { track ->
             // Вставка текста из истории
@@ -225,7 +223,9 @@ class SearchActivity : AppCompatActivity() {
         historyTracks.clear()
         historyTracks.addAll(history)
         historyAdapter.notifyDataSetChanged()
-        searchHistoryContainer.visibility = if (history.isNotEmpty()) View.VISIBLE else View.GONE
+        // Показываем историю только если поле поиска пустое И история не пустая
+        val shouldShowHistory = searchEditText.text.isEmpty() && history.isNotEmpty()
+        searchHistoryContainer.visibility = if (shouldShowHistory) View.VISIBLE else View.GONE
     }
 
     private fun addTrackToHistory(track: Track) {
