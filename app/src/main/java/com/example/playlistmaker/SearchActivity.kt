@@ -26,7 +26,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.example.playlistmaker.adapters.SearchHistoryAdapter
 import com.example.playlistmaker.manager.SearchHistoryManager
 
 class SearchActivity : AppCompatActivity() {
@@ -48,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryContainer: LinearLayout
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var clearHistoryButton: TextView
-    private lateinit var historyAdapter: SearchHistoryAdapter
+    private lateinit var historyAdapter: SearchRecyclerAdapter
     private val historyTracks = ArrayList<Track>()
 
     private val tracks = ArrayList<Track>()
@@ -196,7 +195,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecyclerView = findViewById(R.id.recyclerViewHistory)
         clearHistoryButton = findViewById(R.id.button_clear_history)
 
-        historyAdapter = SearchHistoryAdapter(historyTracks) { track ->
+        historyAdapter = SearchRecyclerAdapter(historyTracks) { track ->
             // Вставка текста из истории
             searchEditText.setText(track.trackName)
             searchEditText.setSelection(searchEditText.text.length)
