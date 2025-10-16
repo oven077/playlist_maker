@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.example.playlistmaker.manager.SearchHistoryManager
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -134,11 +136,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecycler(tracks: ArrayList<Track>) {
+        recyclerView = findViewById(R.id.recycler_view)
         searchAdapter = SearchRecyclerAdapter(tracks) { track ->
             addTrackToHistory(track)
+            val intent = Intent(this, AudioplayerActivity::class.java)
+            intent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(intent)
         }
         recyclerView.adapter = searchAdapter
     }
+
+
+
+
     private fun retry() {
         buttonRetry.setOnClickListener {
             getTrack()
