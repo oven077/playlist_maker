@@ -1,74 +1,89 @@
 package com.example.playlistmaker
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.model.Track
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.example.playlistmaker.model.Track
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 class AudioplayerActivity : AppCompatActivity() {
+
+    private lateinit var toolbar: com.google.android.material.appbar.MaterialToolbar
+    private lateinit var trackName: TextView
+    private lateinit var trackTime: TextView
+    private lateinit var artistName: TextView
+    private lateinit var albumIcon: ImageView
+    private lateinit var collectionName: TextView
+    private lateinit var releaseDate: TextView
+    private lateinit var primaryGenreName: TextView
+    private lateinit var country: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audioplayer)
 
-        findViewById<TextView>(R.id.player_toolbar).setOnClickListener {
-            finish()
-        }
+        initToolbar()
+        initTrackInfo()
+    }
 
-        val trackJson = intent.getStringExtra("TRACK")
-        if (trackJson != null) {
-            try {
-                val track = Gson().fromJson(trackJson, Track::class.java)
-                showTrackInfo(track)
-            } catch (e: Exception) {
-                finish()
-            }
-        } else {
+    private fun initToolbar() {
+        toolbar = findViewById(R.id.player_toolbar)
+        toolbar.setNavigationOnClickListener {
             finish()
         }
     }
 
-    private fun showTrackInfo(track: Track) {
-        findViewById<TextView>(R.id.trackName).text = track.trackName
-        findViewById<TextView>(R.id.artistName).text = track.artistName
+    private fun initTrackInfo() {
+        // Исправлено: используем строку "TRACK" вместо константы TRACK
+        val track = Gson().fromJson(intent.getStringExtra("TRACK"), Track::class.java)
 
-        // Правильное форматирование времени
-        try {
-            val timeMillis = track.trackTimeMillis.toIntOrNull() ?: 0
-            val minutes = timeMillis / 60000
-            val seconds = (timeMillis % 60000) / 1000
-            findViewById<TextView>(R.id.trackTime).text = String.format("%d:%02d", minutes, seconds)
-        } catch (e: Exception) {
-            findViewById<TextView>(R.id.trackTime).text = "0:00"
+        trackName = findViewById(R.id.trackName)
+        artistName = findViewById(R.id.artistName)
+        trackTime = findViewById(R.id.trackTime)
+        albumIcon = findViewById(R.id.track_icon)
+        collectionName = findViewById(R.id.album_name)
+        releaseDate = findViewById(R.id.release_date_data)
+        primaryGenreName = findViewById(R.id.primary_genre_name)
+        country = findViewById(R.id.country_data)
+
+        Glide
+            .with(albumIcon)
+            .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .placeholder(R.drawable.placeholder_512)
+            .centerCrop()
+            .transform(
+                RoundedCorners(
+                    resources.getDimensionPixelSize(
+                        R.dimen.corner_radius_8
+                    )
+                )
+            )
+            .into(albumIcon)
+
+        trackName.text = track.trackName
+        artistName.text = track.artistName
+        primaryGenreName.text = track.primaryGenreName
+        country.text = track.country
+
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toInt())
+
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
+        if (date != null) {
+            val formatDatesString = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
+            releaseDate.text = formatDatesString
         }
 
-        findViewById<TextView>(R.id.album_name).text = track.collectionName
-
-        // Правильное форматирование года
-        try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-            val date = inputFormat.parse(track.releaseDate)
-            findViewById<TextView>(R.id.release_date_data).text = outputFormat.format(date)
-        } catch (e: Exception) {
-            // Если не удалось распарсить, показываем как есть
-            findViewById<TextView>(R.id.release_date_data).text = track.releaseDate
-        }
-
-        findViewById<TextView>(R.id.primary_genre_name).text = track.primaryGenreName
-        findViewById<TextView>(R.id.country_data).text = track.country
-
-        val imageView = findViewById<ImageView>(R.id.track_icon)
-        if (track.artworkUrl100.isNotEmpty()) {
-            Glide.with(this)
-                .load(track.artworkUrl100)
-                .placeholder(R.drawable.placeholder_512)
-                .into(imageView)
+        if (track.collectionName.isNotEmpty()) {
+            collectionName.text = track.collectionName
+        } else {
+            collectionName.visibility = View.GONE
         }
     }
 }
