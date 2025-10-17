@@ -206,16 +206,10 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.button_clear_history)
 
         historyAdapter = SearchRecyclerAdapter(historyTracks) { track ->
-            // Вставка текста из истории
-            searchEditText.setText(track.trackName)
-            searchEditText.setSelection(searchEditText.text.length)
-            searchClearIcon.visibility = View.VISIBLE
-
-            // Скрываем историю и плейсхолдеры
-            searchHistoryContainer.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-            placeholderNothingWasFound.visibility = View.GONE
-            placeholderCommunicationsProblem.visibility = View.GONE
+            // Открываем плеер с выбранным треком
+            val intent = Intent(this, AudioplayerActivity::class.java)
+            intent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(intent)
         }
         historyRecyclerView.adapter = historyAdapter
 
