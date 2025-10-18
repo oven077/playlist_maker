@@ -9,7 +9,7 @@ import com.example.playlistmaker.viewHolders.SearchViewHolder
 
 class SearchRecyclerAdapter(
     private val items: ArrayList<Track>,
-    private val onTrackClickListener: (Track) -> Unit
+    private val onTrackClick: (Track) -> Unit // Исправлено имя параметра
 ) : RecyclerView.Adapter<SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
@@ -24,9 +24,8 @@ class SearchRecyclerAdapter(
         val track = items[position]
         holder.bind(track)
 
-        // Добавляем обработчик клика
         holder.itemView.setOnClickListener {
-            onTrackClickListener(track)
+            onTrackClick(track) // Исправлено имя параметра
         }
     }
 }

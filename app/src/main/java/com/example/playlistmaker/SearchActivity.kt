@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.example.playlistmaker.manager.SearchHistoryManager
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -134,11 +136,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecycler(tracks: ArrayList<Track>) {
+        recyclerView = findViewById(R.id.recycler_view)
         searchAdapter = SearchRecyclerAdapter(tracks) { track ->
             addTrackToHistory(track)
+            val intent = Intent(this, AudioplayerActivity::class.java)
+            intent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(intent)
         }
         recyclerView.adapter = searchAdapter
     }
+
+
+
+
     private fun retry() {
         buttonRetry.setOnClickListener {
             getTrack()
@@ -196,16 +206,10 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.button_clear_history)
 
         historyAdapter = SearchRecyclerAdapter(historyTracks) { track ->
-            // Вставка текста из истории
-            searchEditText.setText(track.trackName)
-            searchEditText.setSelection(searchEditText.text.length)
-            searchClearIcon.visibility = View.VISIBLE
-
-            // Скрываем историю и плейсхолдеры
-            searchHistoryContainer.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-            placeholderNothingWasFound.visibility = View.GONE
-            placeholderCommunicationsProblem.visibility = View.GONE
+            // Открываем плеер с выбранным треком
+            val intent = Intent(this, AudioplayerActivity::class.java)
+            intent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(intent)
         }
         historyRecyclerView.adapter = historyAdapter
 
