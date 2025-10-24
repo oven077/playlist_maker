@@ -18,4 +18,8 @@
     <color name="search_result_track_text_color">#FFFFFF</color>
     <color name="search_result_artist_text_color">#FFFFFF</color>
 
+    <color name="dark_grey">#4d4d4d</color>
+    <color name="player_text_color">#FFFFFF</color>
+
+
 </resources>
