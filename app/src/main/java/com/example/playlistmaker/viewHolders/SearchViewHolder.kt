@@ -16,13 +16,9 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         trackName.text = track.trackName
         artistName.text = track.artistName
 
-        // Безопасное форматирование времени
-        try {
-            val timeMillis = track.trackTimeMillis.toIntOrNull() ?: 0
-            trackTime.text = String.format("%d:%02d", timeMillis / 60000, (timeMillis % 60000) / 1000)
-        } catch (e: Exception) {
-            trackTime.text = "0:00"
-        }
+        val minutes = track.trackTimeMillis / 60000
+        val seconds = (track.trackTimeMillis % 60000) / 1000
+        trackTime.text = String.format("%d:%02d", minutes, seconds)
 
         Glide.with(itemView)
             .load(track.artworkUrl100)

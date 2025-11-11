@@ -1,5 +1,9 @@
 package com.example.playlistmaker
 
 enum class PlaceHolder {
-    SEARCH_RESULT, NOT_FOUND, ERROR
+    SEARCH_RESULT,
+    NOT_FOUND,
+    ERROR,
+    LOADING,
+    HISTORY
 }
