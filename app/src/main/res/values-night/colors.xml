@@ -20,6 +20,5 @@
 
     <color name="dark_grey">#4d4d4d</color>
     <color name="player_text_color">#FFFFFF</color>
-
-
+    <color name="progress_indicator_color">#3772E7</color>
 </resources>
