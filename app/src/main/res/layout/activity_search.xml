@@ -124,6 +124,18 @@
                 app:cornerRadius="54dp" />
         </LinearLayout>
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/searchProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="160dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            app:indicatorColor="@color/progress_indicator_color"
+            app:indicatorSize="48dp"
+            app:trackThickness="4dp" />
+
         <LinearLayout
             android:id="@+id/history_list"
             android:layout_width="match_parent"
