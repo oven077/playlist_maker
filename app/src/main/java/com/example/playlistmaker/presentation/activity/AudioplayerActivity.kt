@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activity
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.Constants
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.entity.Track
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -127,7 +129,12 @@ class AudioplayerActivity : AppCompatActivity() {
             collectionTitle.visibility = View.GONE
         }
 
-        preparePlayer(track.previewUrl)
+        if (track.previewUrl.isNotEmpty()) {
+            preparePlayer(track.previewUrl)
+        } else {
+            playButton.isEnabled = false
+            trackProgress.text = Constants.CURRENT_TIME_ZERO
+        }
     }
 
     private fun preparePlayer(previewUrl: String) {
@@ -196,3 +203,4 @@ class AudioplayerActivity : AppCompatActivity() {
         private const val STATE_PAUSED = 3
     }
 }
+

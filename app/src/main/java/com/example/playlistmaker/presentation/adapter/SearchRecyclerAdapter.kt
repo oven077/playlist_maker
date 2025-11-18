@@ -1,15 +1,15 @@
-package com.example.playlistmaker.adapters
+package com.example.playlistmaker.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.model.Track
-import com.example.playlistmaker.viewHolders.SearchViewHolder
+import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.presentation.viewholder.SearchViewHolder
 
 class SearchRecyclerAdapter(
     private val items: ArrayList<Track>,
-    private val onTrackClick: (Track) -> Unit // Исправлено имя параметра
+    private val onTrackClick: (Track) -> Unit
 ) : RecyclerView.Adapter<SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
@@ -25,7 +25,7 @@ class SearchRecyclerAdapter(
         holder.bind(track)
 
         holder.itemView.setOnClickListener {
-            onTrackClick(track) // Исправлено имя параметра
+            onTrackClick(track)
         }
     }
 }
