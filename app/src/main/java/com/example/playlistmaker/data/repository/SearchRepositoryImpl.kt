@@ -17,10 +17,14 @@ class SearchRepositoryImpl(
                 onSuccess = { dtos ->
                     callback(Result.success(TrackMapper.map(dtos)))
                 },
-                onFailure = { error ->
+                onFailure =   { error ->
                     callback(Result.failure(error))
+
+
                 }
             )
         }
     }
+
+    private val asd = 1;
 }

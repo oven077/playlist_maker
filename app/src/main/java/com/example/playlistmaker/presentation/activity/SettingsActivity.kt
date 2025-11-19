@@ -2,7 +2,6 @@ package com.example.playlistmaker.presentation.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -11,18 +10,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.R
+import com.example.playlistmaker.di.Creator
+import com.example.playlistmaker.domain.interactor.GetDarkThemeInteractor
+import com.example.playlistmaker.domain.interactor.SetDarkThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
+    
     @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
+    private lateinit var setDarkThemeInteractor: SetDarkThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        
+        initDependencies()
+        
         findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener() {
             finish()
         }
 
-        val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val isDarkThemeEnabled = preferences.getBoolean(KEY_DARK_THEME, false)
+        val isDarkThemeEnabled = getDarkThemeInteractor.execute()
 
         val darkThemeSwitch = findViewById<Switch>(R.id.switch_dark_theme)
         darkThemeSwitch.isChecked = isDarkThemeEnabled
@@ -33,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
             AppCompatDelegate.setDefaultNightMode(mode)
-            preferences.edit().putBoolean(KEY_DARK_THEME, isChecked).apply()
+            setDarkThemeInteractor.execute(isChecked)
         }
 
         findViewById<Button>(R.id.button_sharing).setOnClickListener {
@@ -58,8 +66,9 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, null))
         }
     }
-    companion object {
-        private const val PREFS_NAME = "app_preferences"
-        private const val KEY_DARK_THEME = "dark_theme"
+    
+    private fun initDependencies() {
+        getDarkThemeInteractor = Creator.provideGetDarkThemeInteractor(this)
+        setDarkThemeInteractor = Creator.provideSetDarkThemeInteractor(this)
     }
 }

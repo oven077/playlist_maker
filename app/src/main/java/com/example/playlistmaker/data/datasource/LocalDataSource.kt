@@ -8,17 +8,26 @@ import com.google.gson.reflect.TypeToken
 
 class LocalDataSource(context: Context) {
     companion object {
-        private const val PREF_NAME = "search_history"
+        private const val PREF_NAME_HISTORY = "search_history"
         private const val KEY_HISTORY = "search_history_tracks"
         private const val MAX_HISTORY_SIZE = 10
+        
+        private const val PREF_NAME_SETTINGS = "app_preferences"
+        private const val KEY_DARK_THEME = "dark_theme"
     }
 
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    // SharedPreferences для истории поиска
+    private val historyPreferences: SharedPreferences =
+        context.getSharedPreferences(PREF_NAME_HISTORY, Context.MODE_PRIVATE)
+    
+    // SharedPreferences для настроек
+    private val settingsPreferences: SharedPreferences =
+        context.getSharedPreferences(PREF_NAME_SETTINGS, Context.MODE_PRIVATE)
+    
     private val gson = Gson()
 
     fun getSearchHistory(): List<TrackDto> {
-        val historyJson = sharedPreferences.getString(KEY_HISTORY, null)
+        val historyJson = historyPreferences.getString(KEY_HISTORY, null)
         return if (historyJson != null) {
             try {
                 val type = object : TypeToken<List<TrackDto>>() {}.type
@@ -33,13 +42,13 @@ class LocalDataSource(context: Context) {
 
     fun saveSearchHistory(tracks: List<TrackDto>) {
         val json = gson.toJson(tracks)
-        sharedPreferences.edit()
+        historyPreferences.edit()
             .putString(KEY_HISTORY, json)
             .apply()
     }
 
     fun clearSearchHistory() {
-        sharedPreferences.edit()
+        historyPreferences.edit()
             .remove(KEY_HISTORY)
             .apply()
     }
@@ -54,5 +63,16 @@ class LocalDataSource(context: Context) {
         }
         
         saveSearchHistory(currentHistory)
+    }
+
+    // Методы для настроек
+    fun getDarkThemeEnabled(): Boolean {
+        return settingsPreferences.getBoolean(KEY_DARK_THEME, false)
+    }
+
+    fun setDarkThemeEnabled(enabled: Boolean) {
+        settingsPreferences.edit()
+            .putBoolean(KEY_DARK_THEME, enabled)
+            .apply()
     }
 }

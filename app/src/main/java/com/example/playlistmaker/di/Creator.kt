@@ -7,10 +7,13 @@ import com.example.playlistmaker.data.datasource.LocalDataSource
 import com.example.playlistmaker.data.datasource.RemoteDataSource
 import com.example.playlistmaker.data.repository.HistoryRepositoryImpl
 import com.example.playlistmaker.data.repository.SearchRepositoryImpl
+import com.example.playlistmaker.data.repository.SettingsRepositoryImpl
 import com.example.playlistmaker.domain.interactor.AddTrackToHistoryInteractor
 import com.example.playlistmaker.domain.interactor.ClearSearchHistoryInteractor
+import com.example.playlistmaker.domain.interactor.GetDarkThemeInteractor
 import com.example.playlistmaker.domain.interactor.GetSearchHistoryInteractor
 import com.example.playlistmaker.domain.interactor.SearchTracksInteractor
+import com.example.playlistmaker.domain.interactor.SetDarkThemeInteractor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -57,6 +60,18 @@ object Creator {
 
     fun provideClearSearchHistoryInteractor(context: Context): ClearSearchHistoryInteractor {
         return ClearSearchHistoryInteractor(provideHistoryRepository(context))
+    }
+
+    fun provideSettingsRepository(context: Context): SettingsRepositoryImpl {
+        return SettingsRepositoryImpl(provideLocalDataSource(context))
+    }
+
+    fun provideGetDarkThemeInteractor(context: Context): GetDarkThemeInteractor {
+        return GetDarkThemeInteractor(provideSettingsRepository(context))
+    }
+
+    fun provideSetDarkThemeInteractor(context: Context): SetDarkThemeInteractor {
+        return SetDarkThemeInteractor(provideSettingsRepository(context))
     }
 }
 
