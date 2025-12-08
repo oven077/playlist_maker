@@ -1,8 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -10,18 +9,28 @@ import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.R
+import com.example.playlistmaker.di.Creator
+import com.example.playlistmaker.domain.interactor.GetDarkThemeInteractor
+import com.example.playlistmaker.domain.interactor.SetDarkThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
+    
     @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
+    private lateinit var setDarkThemeInteractor: SetDarkThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        
+        initDependencies()
+        
         findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener() {
             finish()
         }
 
-        val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val isDarkThemeEnabled = preferences.getBoolean(KEY_DARK_THEME, false)
+        val isDarkThemeEnabled = getDarkThemeInteractor.execute()
 
         val darkThemeSwitch = findViewById<Switch>(R.id.switch_dark_theme)
         darkThemeSwitch.isChecked = isDarkThemeEnabled
@@ -32,17 +41,17 @@ class SettingsActivity : AppCompatActivity() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
             AppCompatDelegate.setDefaultNightMode(mode)
-            preferences.edit().putBoolean(KEY_DARK_THEME, isChecked).apply()
+            setDarkThemeInteractor.execute(isChecked)
         }
 
-        findViewById<Button>(R.id.button_sharing).setOnClickListener() {
+        findViewById<Button>(R.id.button_sharing).setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_link))
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, null))
         }
 
-        findViewById<Button>(R.id.button_support).setOnClickListener() {
+        findViewById<Button>(R.id.button_support).setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
             intent.data = Uri.parse("mailto:")
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_address)))
@@ -51,14 +60,15 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, null))
         }
 
-        findViewById<Button>(R.id.button_user_agreement).setOnClickListener() {
+        findViewById<Button>(R.id.button_user_agreement).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.support_user_agreement))
             startActivity(Intent.createChooser(intent, null))
         }
     }
-    companion object {
-        private const val PREFS_NAME = "app_preferences"
-        private const val KEY_DARK_THEME = "dark_theme"
+    
+    private fun initDependencies() {
+        getDarkThemeInteractor = Creator.provideGetDarkThemeInteractor(this)
+        setDarkThemeInteractor = Creator.provideSetDarkThemeInteractor(this)
     }
 }

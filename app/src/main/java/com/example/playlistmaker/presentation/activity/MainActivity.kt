@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,12 +7,19 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.R
+import com.example.playlistmaker.di.Creator
+import com.example.playlistmaker.domain.interactor.GetDarkThemeInteractor
 
 
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val isDarkThemeEnabled = preferences.getBoolean(KEY_DARK_THEME, false)
+        initDependencies()
+        
+        val isDarkThemeEnabled = getDarkThemeInteractor.execute()
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
@@ -38,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initDependencies() {
+        getDarkThemeInteractor = Creator.provideGetDarkThemeInteractor(this)
+    }
+
     private fun navigateTo(activityClass: Class<out Activity>) {
         startActivity(Intent(this@MainActivity, activityClass))
     }
@@ -50,8 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "asd"
-        private const val PREFS_NAME = "app_preferences"
-        private const val KEY_DARK_THEME = "dark_theme"
     }
 
 }
