@@ -1,0 +1,13 @@
+package com.example.playlistmaker.player.presentation.viewmodel
+
+import com.example.playlistmaker.core.entity.Track
+
+data class PlayerScreenState(
+    val track: Track? = null,
+    val isPrepared: Boolean = false,
+    val isPlaying: Boolean = false,
+    val currentPosition: Int = 0,
+    val error: String? = null,
+    val wasPrepared: Boolean = false // Флаг, что трек был подготовлен хотя бы раз
+)
+
