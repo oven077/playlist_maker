@@ -17,13 +17,11 @@ import com.example.playlistmaker.search.domain.interactor.SearchTracksInteractor
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Зависимость ТОЛЬКО от Interactors (из domain слоя)
     private val searchTracksInteractor: SearchTracksInteractor
     private val getSearchHistoryInteractor: GetSearchHistoryInteractor
     private val addTrackToHistoryInteractor: AddTrackToHistoryInteractor
     private val clearSearchHistoryInteractor: ClearSearchHistoryInteractor
 
-    // Одно состояние экрана (НЕ отдельная LiveData для каждой View)
     private val _screenState = MutableLiveData<SearchScreenState>()
     val screenState: LiveData<SearchScreenState> = _screenState
 
@@ -35,7 +33,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val SEARCH_REQUEST_TOKEN = Any()
 
     init {
-        // Инициализация через Creator
         searchTracksInteractor = Creator.provideSearchTracksInteractor(getApplication())
         getSearchHistoryInteractor = Creator.provideGetSearchHistoryInteractor(getApplication())
         addTrackToHistoryInteractor = Creator.provideAddTrackToHistoryInteractor(getApplication())
@@ -108,7 +105,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun addTrackToHistory(track: Track) {
         addTrackToHistoryInteractor.execute(track)
-        // Обновляем состояние экрана после добавления в историю
         showHistory()
     }
 

@@ -8,6 +8,6 @@ data class PlayerScreenState(
     val isPlaying: Boolean = false,
     val currentPosition: Int = 0,
     val error: String? = null,
-    val wasPrepared: Boolean = false // Флаг, что трек был подготовлен хотя бы раз
+    val wasPrepared: Boolean = false
 )
 

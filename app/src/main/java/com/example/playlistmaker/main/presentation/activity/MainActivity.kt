@@ -3,7 +3,6 @@ package com.example.playlistmaker.main.presentation.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -16,12 +15,12 @@ import com.example.playlistmaker.settings.presentation.activity.SettingsActivity
 
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initDependencies()
-        
+
         val isDarkThemeEnabled = getDarkThemeInteractor.execute()
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "onCreate: MainActivity создана $this")
 
 
         setContentView(R.layout.activity_main)
@@ -56,15 +54,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this@MainActivity, activityClass))
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG,"MainActivity старт $this")
-    }
-
-
-    companion object {
-        private const val TAG = "asd"
-    }
 
 }
 

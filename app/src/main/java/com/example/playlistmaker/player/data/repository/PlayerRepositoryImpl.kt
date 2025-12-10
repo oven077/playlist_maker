@@ -53,15 +53,12 @@ class PlayerRepositoryImpl(
         currentState = PlayerState.PREPARING
         
         try {
-            // Проверяем, что MediaPlayer существует, если нет - создаем заново
             if (mediaPlayer == null) {
                 mediaPlayer = playerDataSource.createMediaPlayer()
                 setupListeners()
             }
             
-            // Всегда сбрасываем MediaPlayer перед установкой нового источника
             mediaPlayer?.reset()
-            // После reset нужно переустановить listeners, так как они сбрасываются
             setupListeners()
             mediaPlayer?.setDataSource(previewUrl)
             mediaPlayer?.prepareAsync()
@@ -75,7 +72,6 @@ class PlayerRepositoryImpl(
     
     override fun play() {
         if (currentState == PlayerState.PREPARED || currentState == PlayerState.PAUSED) {
-            // Всегда сбрасываем позицию на начало перед воспроизведением, если трек завершен
             val duration = mediaPlayer?.duration ?: 0
             val currentPosition = mediaPlayer?.currentPosition ?: 0
             if (duration > 0 && currentPosition >= duration - 100) {
@@ -115,8 +111,6 @@ class PlayerRepositoryImpl(
     
     override fun setOnPreparedListener(listener: () -> Unit) {
         onPreparedCallback = listener
-        // Если MediaPlayer уже создан, устанавливаем listener сразу
-        // Важно: listener будет переустановлен в setupListeners() после reset()
         if (mediaPlayer != null) {
             mediaPlayer?.setOnPreparedListener {
                 currentState = PlayerState.PREPARED
@@ -127,7 +121,6 @@ class PlayerRepositoryImpl(
     
     override fun setOnCompletionListener(listener: () -> Unit) {
         onCompletionCallback = listener
-        // Переустанавливаем listener в MediaPlayer, чтобы убедиться, что он актуален
         mediaPlayer?.setOnCompletionListener {
             currentState = PlayerState.PREPARED
             mediaPlayer?.seekTo(0)

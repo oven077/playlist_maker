@@ -125,11 +125,8 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.screenState.observe(this) { state ->
             state.track?.let { track ->
-                // Update play button state
-                // Кнопка активна когда трек подготовлен
                 playButton.isEnabled = state.isPrepared || state.wasPrepared
                 
-                // Update play/pause icon
                 val iconRes = if (state.isPlaying) {
                     R.drawable.pause
                 } else {
@@ -137,7 +134,6 @@ class AudioplayerActivity : AppCompatActivity() {
                 }
                 playButton.setImageResource(iconRes)
                 
-                // Update progress
                 trackProgress.text = timeFormat.format(state.currentPosition.toLong())
             }
         }

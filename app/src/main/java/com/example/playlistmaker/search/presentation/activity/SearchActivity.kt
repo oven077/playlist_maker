@@ -29,10 +29,6 @@ import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
-    }
-
     private lateinit var viewModel: SearchViewModel
 
     private lateinit var searchEditText: EditText
@@ -44,7 +40,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var buttonRetry: Button
     private lateinit var progressBar: ProgressBar
 
-    // История поиска
     private lateinit var searchHistoryContainer: LinearLayout
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var clearHistoryButton: TextView
@@ -57,7 +52,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        // ViewModel через ViewModelProvider
         viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         initViews()
@@ -68,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
         initSearch()
         inputText()
 
-        // Подписка на LiveData (НЕ MutableLiveData!)
         viewModel.screenState.observe(this) { state ->
             render(state)
         }
@@ -95,7 +88,6 @@ class SearchActivity : AppCompatActivity() {
     private fun initSearch() {
         searchEditText.requestFocus()
 
-        // ТОЛЬКО действия пользователя - вызов метода ViewModel
         searchClearIcon.setOnClickListener {
             if (searchEditText.text.isNotEmpty()) {
                 searchEditText.text.clear()
@@ -120,10 +112,8 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // ТОЛЬКО UI логика - видимость кнопки очистки
                 searchClearIcon.visibility = if (s.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
                 
-                // Вызов метода ViewModel (бизнес-логика там)
                 viewModel.searchDebounce(s?.toString())
             }
 
@@ -142,10 +132,8 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler(tracks: ArrayList<Track>) {
         recyclerView = findViewById(R.id.recycler_view)
         searchAdapter = SearchRecyclerAdapter(tracks) { track ->
-            // ТОЛЬКО действия пользователя - вызов метода ViewModel
             viewModel.onTrackClicked(track)
             
-            // Открытие AudioPlayer остается в Activity (навигация)
             val intent = Intent(this, AudioplayerActivity::class.java)
             intent.putExtra(Constants.TRACK, Gson().toJson(track))
             startActivity(intent)
@@ -160,7 +148,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    // ТОЛЬКО отображение данных на основе состояния из LiveData
     private fun render(state: SearchScreenState) {
         when (state) {
             is SearchScreenState.Loading -> {
@@ -220,17 +207,14 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.button_clear_history)
 
         historyAdapter = SearchRecyclerAdapter(historyTracks) { track ->
-            // ТОЛЬКО действия пользователя - вызов метода ViewModel
             viewModel.onTrackClicked(track)
             
-            // Открытие AudioPlayer остается в Activity (навигация)
             val intent = Intent(this, AudioplayerActivity::class.java)
             intent.putExtra(Constants.TRACK, Gson().toJson(track))
             startActivity(intent)
         }
         historyRecyclerView.adapter = historyAdapter
 
-        // ТОЛЬКО действия пользователя - вызов метода ViewModel
         clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
         }
