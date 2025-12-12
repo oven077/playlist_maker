@@ -9,18 +9,25 @@ import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.core.Constants
 import com.example.playlistmaker.core.di.Creator
 import com.example.playlistmaker.core.entity.Track
+import com.example.playlistmaker.player.domain.interactor.IGetCurrentPositionInteractor
+import com.example.playlistmaker.player.domain.interactor.IGetPlayerStateInteractor
+import com.example.playlistmaker.player.domain.interactor.IPauseTrackInteractor
+import com.example.playlistmaker.player.domain.interactor.IPlayTrackInteractor
+import com.example.playlistmaker.player.domain.interactor.IPreparePlayerInteractor
+import com.example.playlistmaker.player.domain.interactor.IReleasePlayerInteractor
+import com.example.playlistmaker.player.domain.interactor.ISetOnCompletionListenerInteractor
 import com.example.playlistmaker.player.domain.model.PlayerState
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val preparePlayerInteractor = Creator.providePreparePlayerInteractor(getApplication())
-    private val playTrackInteractor = Creator.providePlayTrackInteractor(getApplication())
-    private val pauseTrackInteractor = Creator.providePauseTrackInteractor(getApplication())
-    private val getPlayerStateInteractor = Creator.provideGetPlayerStateInteractor(getApplication())
-    private val getCurrentPositionInteractor = Creator.provideGetCurrentPositionInteractor(getApplication())
-    private val setOnCompletionListenerInteractor = Creator.provideSetOnCompletionListenerInteractor(getApplication())
-    private val releasePlayerInteractor = Creator.provideReleasePlayerInteractor(getApplication())
+    private val preparePlayerInteractor: IPreparePlayerInteractor = Creator.providePreparePlayerInteractor(getApplication())
+    private val playTrackInteractor: IPlayTrackInteractor = Creator.providePlayTrackInteractor(getApplication())
+    private val pauseTrackInteractor: IPauseTrackInteractor = Creator.providePauseTrackInteractor(getApplication())
+    private val getPlayerStateInteractor: IGetPlayerStateInteractor = Creator.provideGetPlayerStateInteractor(getApplication())
+    private val getCurrentPositionInteractor: IGetCurrentPositionInteractor = Creator.provideGetCurrentPositionInteractor(getApplication())
+    private val setOnCompletionListenerInteractor: ISetOnCompletionListenerInteractor = Creator.provideSetOnCompletionListenerInteractor(getApplication())
+    private val releasePlayerInteractor: IReleasePlayerInteractor = Creator.provideReleasePlayerInteractor(getApplication())
 
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState

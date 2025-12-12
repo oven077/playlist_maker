@@ -10,13 +10,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.core.di.Creator
 import com.example.playlistmaker.library.presentation.activity.LibraryActivity
 import com.example.playlistmaker.search.presentation.activity.SearchActivity
-import com.example.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
+import com.example.playlistmaker.settings.domain.interactor.IGetDarkThemeInteractor
 import com.example.playlistmaker.settings.presentation.activity.SettingsActivity
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
+    private lateinit var getDarkThemeInteractor: IGetDarkThemeInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initDependencies()

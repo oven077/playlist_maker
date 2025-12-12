@@ -3,10 +3,17 @@ package com.example.playlistmaker.search.domain.interactor
 import com.example.playlistmaker.core.entity.Track
 import com.example.playlistmaker.search.domain.repository.SearchRepository
 
+interface ISearchTracksInteractor {
+    fun execute(
+        query: String,
+        callback: (Result<List<Track>>) -> Unit
+    )
+}
+
 class SearchTracksInteractor(
     private val searchRepository: SearchRepository
-) {
-    fun execute(
+) : ISearchTracksInteractor {
+    override fun execute(
         query: String,
         callback: (Result<List<Track>>) -> Unit
     ) {
@@ -17,4 +24,3 @@ class SearchTracksInteractor(
         searchRepository.searchTracks(query, callback)
     }
 }
-

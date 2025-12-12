@@ -11,14 +11,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.R
 import com.example.playlistmaker.core.di.Creator
-import com.example.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
-import com.example.playlistmaker.settings.domain.interactor.SetDarkThemeInteractor
+import com.example.playlistmaker.settings.domain.interactor.IGetDarkThemeInteractor
+import com.example.playlistmaker.settings.domain.interactor.ISetDarkThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
     
     @SuppressLint("UseSwitchCompatOrMaterialCode")
-    private lateinit var getDarkThemeInteractor: GetDarkThemeInteractor
-    private lateinit var setDarkThemeInteractor: SetDarkThemeInteractor
+    private lateinit var getDarkThemeInteractor: IGetDarkThemeInteractor
+    private lateinit var setDarkThemeInteractor: ISetDarkThemeInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

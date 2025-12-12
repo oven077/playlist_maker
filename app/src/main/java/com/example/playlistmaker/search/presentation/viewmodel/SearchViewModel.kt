@@ -10,17 +10,17 @@ import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.core.Constants
 import com.example.playlistmaker.core.di.Creator
 import com.example.playlistmaker.core.entity.Track
-import com.example.playlistmaker.search.domain.interactor.AddTrackToHistoryInteractor
-import com.example.playlistmaker.search.domain.interactor.ClearSearchHistoryInteractor
-import com.example.playlistmaker.search.domain.interactor.GetSearchHistoryInteractor
-import com.example.playlistmaker.search.domain.interactor.SearchTracksInteractor
+import com.example.playlistmaker.search.domain.interactor.IAddTrackToHistoryInteractor
+import com.example.playlistmaker.search.domain.interactor.IClearSearchHistoryInteractor
+import com.example.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
+import com.example.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val searchTracksInteractor: SearchTracksInteractor
-    private val getSearchHistoryInteractor: GetSearchHistoryInteractor
-    private val addTrackToHistoryInteractor: AddTrackToHistoryInteractor
-    private val clearSearchHistoryInteractor: ClearSearchHistoryInteractor
+    private val searchTracksInteractor: ISearchTracksInteractor
+    private val getSearchHistoryInteractor: IGetSearchHistoryInteractor
+    private val addTrackToHistoryInteractor: IAddTrackToHistoryInteractor
+    private val clearSearchHistoryInteractor: IClearSearchHistoryInteractor
 
     private val _screenState = MutableLiveData<SearchScreenState>()
     val screenState: LiveData<SearchScreenState> = _screenState
@@ -105,7 +105,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun addTrackToHistory(track: Track) {
         addTrackToHistoryInteractor.execute(track)
-        showHistory()
     }
 
     fun clearSearch() {
