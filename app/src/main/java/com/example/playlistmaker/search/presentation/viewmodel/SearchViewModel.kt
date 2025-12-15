@@ -8,19 +8,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.core.Constants
-import com.example.playlistmaker.core.di.Creator
 import com.example.playlistmaker.core.entity.Track
 import com.example.playlistmaker.search.domain.interactor.IAddTrackToHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.IClearSearchHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val searchTracksInteractor: ISearchTracksInteractor
-    private val getSearchHistoryInteractor: IGetSearchHistoryInteractor
-    private val addTrackToHistoryInteractor: IAddTrackToHistoryInteractor
+class SearchViewModel(
+    application: Application,
+    private val searchTracksInteractor: ISearchTracksInteractor,
+    private val getSearchHistoryInteractor: IGetSearchHistoryInteractor,
+    private val addTrackToHistoryInteractor: IAddTrackToHistoryInteractor,
     private val clearSearchHistoryInteractor: IClearSearchHistoryInteractor
+) : AndroidViewModel(application) {
 
     private val _screenState = MutableLiveData<SearchScreenState>()
     val screenState: LiveData<SearchScreenState> = _screenState
@@ -33,11 +33,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val SEARCH_REQUEST_TOKEN = Any()
 
     init {
-        searchTracksInteractor = Creator.provideSearchTracksInteractor(getApplication())
-        getSearchHistoryInteractor = Creator.provideGetSearchHistoryInteractor(getApplication())
-        addTrackToHistoryInteractor = Creator.provideAddTrackToHistoryInteractor(getApplication())
-        clearSearchHistoryInteractor = Creator.provideClearSearchHistoryInteractor(getApplication())
-
         showHistory()
     }
 

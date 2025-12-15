@@ -10,21 +10,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.R
-import com.example.playlistmaker.core.di.Creator
 import com.example.playlistmaker.settings.domain.interactor.IGetDarkThemeInteractor
 import com.example.playlistmaker.settings.domain.interactor.ISetDarkThemeInteractor
+import org.koin.android.ext.android.inject
 
 class SettingsActivity : AppCompatActivity() {
     
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    private lateinit var getDarkThemeInteractor: IGetDarkThemeInteractor
-    private lateinit var setDarkThemeInteractor: ISetDarkThemeInteractor
+    private val getDarkThemeInteractor: IGetDarkThemeInteractor by inject()
+    private val setDarkThemeInteractor: ISetDarkThemeInteractor by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        
-        initDependencies()
         
         findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener() {
             finish()
@@ -32,6 +29,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val isDarkThemeEnabled = getDarkThemeInteractor.execute()
 
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
         val darkThemeSwitch = findViewById<Switch>(R.id.switch_dark_theme)
         darkThemeSwitch.isChecked = isDarkThemeEnabled
         darkThemeSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -65,11 +63,6 @@ class SettingsActivity : AppCompatActivity() {
             intent.data = Uri.parse(getString(R.string.support_user_agreement))
             startActivity(Intent.createChooser(intent, null))
         }
-    }
-    
-    private fun initDependencies() {
-        getDarkThemeInteractor = Creator.provideGetDarkThemeInteractor(this)
-        setDarkThemeInteractor = Creator.provideSetDarkThemeInteractor(this)
     }
 }
 

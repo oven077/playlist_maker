@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -15,13 +14,14 @@ import com.example.playlistmaker.core.entity.Track
 import com.example.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
 class AudioplayerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel()
     private lateinit var toolbar: Toolbar
     private lateinit var trackName: TextView
     private lateinit var trackDuration: TextView
@@ -42,8 +42,6 @@ class AudioplayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audioplayer)
-
-        viewModel = ViewModelProvider(this)[PlayerViewModel::class.java]
 
         initToolbar()
         initViews()
