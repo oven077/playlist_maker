@@ -16,7 +16,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.core.Constants
@@ -26,10 +25,11 @@ import com.example.playlistmaker.search.presentation.adapter.SearchRecyclerAdapt
 import com.example.playlistmaker.search.presentation.viewmodel.SearchScreenState
 import com.example.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
     private lateinit var searchEditText: EditText
     private lateinit var searchClearIcon: ImageView
@@ -51,8 +51,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         initViews()
         initSearchHistory()

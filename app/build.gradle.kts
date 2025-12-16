@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata)
     implementation(libs.androidx.lifecycle.runtime)
 
-
-
+    // Koin
+    implementation("io.insert-koin:koin-android:3.3.0")
 
 }
