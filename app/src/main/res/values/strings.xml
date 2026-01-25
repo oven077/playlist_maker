@@ -36,5 +36,10 @@
     <string name="playing_time">00:30</string>
     <string name="album_icon">Обложка альбома</string>
 
+    <string name="favorites_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="media_library_empty">Ваша медиатека пуста</string>
+    <string name="no_playlists">Вы не создали\nни одного плейлиста</string>
 
 </resources>
