@@ -36,6 +36,10 @@
 
     <dimen name="size_button">52dp</dimen>
 
+    <dimen name="placeholder_icon_size">120dp</dimen>
+    <!-- Figma: icon Top=210dp from screen top; fragment starts under toolbar+tabs (~104dp) -->
+    <dimen name="placeholder_icon_margin_top_in_fragment">106dp</dimen>
+
 
 
 </resources>

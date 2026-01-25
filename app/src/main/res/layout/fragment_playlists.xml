@@ -23,14 +23,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_new_playlist">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/placeholder_icon_margin_top_in_fragment">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/placeholder_icon_size"
+            android:layout_height="@dimen/placeholder_icon_size"
             android:contentDescription="@string/no_playlists"
             android:src="@drawable/nothingfound" />
 
