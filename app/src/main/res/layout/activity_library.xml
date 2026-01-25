@@ -38,9 +38,8 @@
         app:layout_constraintTop_toBottomOf="@id/library_toolbar"
         app:tabIndicatorColor="?attr/colorOnSecondary"
         app:tabIndicatorFullWidth="false"
-        app:tabSelectedTextColor="?attr/colorOnSecondary"
         app:tabTextAppearance="@style/MediaLibraryTabTextAppearance"
-        app:tabTextColor="@color/grey" />
+        app:tabTextColor="@color/library_tab_text" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/library_view_pager"

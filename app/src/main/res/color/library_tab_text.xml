@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- In Figma selected/unselected text colors are identical; indicator shows selection -->
+    <item android:color="?attr/colorOnSecondary" android:state_selected="true" />
+    <item android:color="?attr/colorOnSecondary" />
+</selector>
+
