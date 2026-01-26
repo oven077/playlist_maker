@@ -80,8 +80,6 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        fun newInstance(): SettingsFragment = SettingsFragment()
-    }
+
 }
 
