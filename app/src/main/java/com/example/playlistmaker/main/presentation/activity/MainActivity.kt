@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         )
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigation.isVisible = destination.id in topLevelDestinations
+            // Ensure bottom nav highlights current destination (even on app start)
+            binding.bottomNavigation.menu.findItem(destination.id)?.isChecked = true
         }
     }
 }
