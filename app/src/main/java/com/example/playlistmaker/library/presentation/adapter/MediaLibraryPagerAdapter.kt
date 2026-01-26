@@ -6,9 +6,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.playlistmaker.library.presentation.fragment.FavoritesTracksFragment
 import com.example.playlistmaker.library.presentation.fragment.PlaylistsFragment
 
-class MediaLibraryPagerAdapter(
-    activity: FragmentActivity,
-) : FragmentStateAdapter(activity) {
+class MediaLibraryPagerAdapter : FragmentStateAdapter {
+
+    constructor(activity: FragmentActivity) : super(activity)
+    constructor(fragment: Fragment) : super(fragment)
 
     override fun getItemCount(): Int = PAGE_COUNT
 
