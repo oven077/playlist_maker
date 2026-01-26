@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/screen_background"
-    tools:context=".library.presentation.activity.LibraryActivity">
+    tools:context=".library.presentation.fragment.LibraryFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/library_toolbar"
@@ -13,9 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/arrow_back"
-        app:navigationIconTint="@color/toolbar_color">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,3 +49,4 @@
         app:layout_constraintTop_toBottomOf="@id/library_tabs" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

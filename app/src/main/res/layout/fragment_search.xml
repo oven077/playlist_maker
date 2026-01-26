@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/screen_background">
+    android:background="@color/screen_background"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="24dp"
-        app:navigationIcon="@drawable/arrow_back"
-        app:navigationIconTint="@color/toolbar_color">
+        android:layout_marginBottom="24dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,15 +58,14 @@
             android:layout_gravity="end"
             android:padding="12dp"
             android:src="@drawable/clear"
-            app:tint="@color/search_form_text_hint_color"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            app:tint="@color/search_form_text_hint_color" />
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -130,8 +127,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="160dp"
-            android:visibility="gone"
             android:indeterminate="true"
+            android:visibility="gone"
             app:indicatorColor="@color/progress_indicator_color"
             app:indicatorSize="48dp"
             app:trackThickness="4dp" />
@@ -176,10 +173,10 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_clear_history"
                         style="@style/ErrorButtonPlaceholder"
-                        android:layout_marginTop="@dimen/margin_24"
-                        android:layout_marginBottom="@dimen/margin_24"
                         android:layout_marginStart="@dimen/margin_24"
+                        android:layout_marginTop="@dimen/margin_24"
                         android:layout_marginEnd="@dimen/margin_24"
+                        android:layout_marginBottom="@dimen/margin_24"
                         android:inputType="textCapSentences"
                         android:text="@string/clear_history" />
 
@@ -192,3 +189,4 @@
     </FrameLayout>
 
 </LinearLayout>
+
