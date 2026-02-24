@@ -1,11 +1,10 @@
 package com.example.playlistmaker.player.presentation.viewmodel
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.core.Constants
 import com.example.playlistmaker.core.entity.Track
 import com.example.playlistmaker.player.domain.interactor.IGetCurrentPositionInteractor
@@ -16,6 +15,10 @@ import com.example.playlistmaker.player.domain.interactor.IPreparePlayerInteract
 import com.example.playlistmaker.player.domain.interactor.IReleasePlayerInteractor
 import com.example.playlistmaker.player.domain.interactor.ISetOnCompletionListenerInteractor
 import com.example.playlistmaker.player.domain.model.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     application: Application,
@@ -31,15 +34,7 @@ class PlayerViewModel(
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState
 
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private val updateProgressRunnable = object : Runnable {
-        override fun run() {
-            if (getPlayerStateInteractor.execute() == PlayerState.PLAYING) {
-                updateProgress()
-                mainHandler.postDelayed(this, Constants.RELOAD_PROGRESS)
-            }
-        }
-    }
+    private var progressJob: Job? = null
 
     fun initTrack(track: Track) {
         _screenState.value = PlayerScreenState(
@@ -60,10 +55,10 @@ class PlayerViewModel(
 
     private fun preparePlayer(previewUrl: String) {
         setOnCompletionListenerInteractor.execute {
-            mainHandler.removeCallbacks(updateProgressRunnable)
+            progressJob?.cancel()
+            progressJob = null
             val st = _screenState.value ?: return@execute
-            
-            mainHandler.post {
+            viewModelScope.launch {
                 _screenState.value = st.copy(
                     isPrepared = true,
                     isPlaying = false,
@@ -116,18 +111,23 @@ class PlayerViewModel(
     private fun play() {
         playTrackInteractor.execute()
         _screenState.value = _screenState.value?.copy(isPlaying = true)
-        mainHandler.post(updateProgressRunnable)
+        progressJob?.cancel()
+        progressJob = viewModelScope.launch {
+            while (isActive) {
+                if (getPlayerStateInteractor.execute() == PlayerState.PLAYING) {
+                    val pos = getCurrentPositionInteractor.execute()
+                    _screenState.value = _screenState.value?.copy(currentPosition = pos)
+                }
+                delay(Constants.RELOAD_PROGRESS)
+            }
+        }
     }
 
     private fun pause() {
         pauseTrackInteractor.execute()
         _screenState.value = _screenState.value?.copy(isPlaying = false)
-        mainHandler.removeCallbacks(updateProgressRunnable)
-    }
-
-    private fun updateProgress() {
-        val pos = getCurrentPositionInteractor.execute()
-        _screenState.value = _screenState.value?.copy(currentPosition = pos)
+        progressJob?.cancel()
+        progressJob = null
     }
 
     fun onPause() {
@@ -136,7 +136,7 @@ class PlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        mainHandler.removeCallbacks(updateProgressRunnable)
+        progressJob?.cancel()
         releasePlayerInteractor.execute()
     }
 }

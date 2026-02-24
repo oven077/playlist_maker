@@ -3,35 +3,24 @@ package com.example.playlistmaker.search.data.datasource
 import com.example.playlistmaker.search.data.api.ApiConstants
 import com.example.playlistmaker.search.data.api.iTunesSearchAPI
 import com.example.playlistmaker.search.data.dto.TrackDto
-import com.example.playlistmaker.search.data.dto.TrackResponseDto
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RemoteDataSource(
     private val api: iTunesSearchAPI
 ) {
-    fun searchTracks(
-        query: String,
-        callback: (Result<List<TrackDto>>) -> Unit
-    ) {
-        api.searchTrack(query).enqueue(object : Callback<TrackResponseDto> {
-            override fun onResponse(
-                call: Call<TrackResponseDto>,
-                response: Response<TrackResponseDto>
-            ) {
-                if (response.isSuccessful && response.code() == ApiConstants.SUCCESS_CODE) {
-                    val tracks = response.body()?.results ?: emptyList()
-                    callback(Result.success(tracks))
-                } else {
-                    callback(Result.failure(Exception("HTTP Error: ${response.code()}")))
-                }
-            }
-
-            override fun onFailure(call: Call<TrackResponseDto>, t: Throwable) {
-                callback(Result.failure(t))
-            }
-        })
-    }
+    fun searchTracks(query: String): Flow<Result<List<TrackDto>>> = flow {
+        val response = api.searchTrack(query)
+        if (response.isSuccessful && response.code() == ApiConstants.SUCCESS_CODE) {
+            val tracks = response.body()?.results ?: emptyList()
+            emit(Result.success(tracks))
+        } else {
+            emit(Result.failure(Exception("HTTP Error: ${response.code()}")))
+        }
+    }.catch { e -> emit(Result.failure(e)) }
+        .flowOn(Dispatchers.IO)
 }
 

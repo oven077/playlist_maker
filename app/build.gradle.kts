@@ -68,4 +68,7 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-android:3.3.0")
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
 }
