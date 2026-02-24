@@ -59,22 +59,24 @@ class SearchViewModel(
             return
         }
 
-        _screenState.postValue(SearchScreenState.Loading)
-        searchTracksInteractor.execute(query) { result ->
-            result.fold(
-                onSuccess = { trackList ->
-                    if (trackList.isNotEmpty()) {
-                        _screenState.postValue(SearchScreenState.Success(trackList))
-                    } else {
-                        _screenState.postValue(SearchScreenState.NothingFound)
+        searchJob = viewModelScope.launch {
+            _screenState.value = SearchScreenState.Loading
+            searchTracksInteractor.execute(query).collect { result ->
+                result.fold(
+                    onSuccess = { trackList ->
+                        _screenState.value = if (trackList.isNotEmpty()) {
+                            SearchScreenState.Success(trackList)
+                        } else {
+                            SearchScreenState.NothingFound
+                        }
+                    },
+                    onFailure = {
+                        _screenState.value = SearchScreenState.Error(
+                            "Загрузка не удалась. Проверьте подключение к интернету"
+                        )
                     }
-                },
-                onFailure = {
-                    _screenState.postValue(
-                        SearchScreenState.Error("Загрузка не удалась. Проверьте подключение к интернету")
-                    )
-                }
-            )
+                )
+            }
         }
     }
 
