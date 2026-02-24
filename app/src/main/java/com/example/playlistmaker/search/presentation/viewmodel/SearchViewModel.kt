@@ -1,18 +1,19 @@
 package com.example.playlistmaker.search.presentation.viewmodel
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.core.Constants
 import com.example.playlistmaker.core.entity.Track
 import com.example.playlistmaker.search.domain.interactor.IAddTrackToHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.IClearSearchHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
 import com.example.playlistmaker.search.domain.interactor.ISearchTracksInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     application: Application,
@@ -28,37 +29,31 @@ class SearchViewModel(
     private val _isClickAllowed = MutableLiveData<Boolean>(true)
     val isClickAllowed: LiveData<Boolean> = _isClickAllowed
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var searchJob: Job? = null
+    private var clickDebounceJob: Job? = null
     private var lastQuery: String? = null
-    private val SEARCH_REQUEST_TOKEN = Any()
 
     init {
         showHistory()
     }
 
     fun searchDebounce(changedText: String?) {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
         if (!changedText.isNullOrEmpty()) {
-            if (lastQuery == changedText) {
-                return
-            }
+            if (lastQuery == changedText) return
             lastQuery = changedText
-            makeDelaySearching(changedText)
+            searchJob = viewModelScope.launch {
+                delay(Constants.SEARCH_DEBOUNCE_DELAY)
+                getTracks(changedText)
+            }
         } else {
+            lastQuery = null
             showHistory()
         }
     }
 
-    private fun makeDelaySearching(changedText: String) {
-        val searchRunnable = Runnable {
-            getTracks(changedText)
-        }
-        val postTime = SystemClock.uptimeMillis() + Constants.SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(searchRunnable, SEARCH_REQUEST_TOKEN, postTime)
-    }
-
     fun getTracks(query: String?) {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
         if (query.isNullOrBlank()) {
             showHistory()
             return
@@ -92,10 +87,11 @@ class SearchViewModel(
 
     private fun trackOnClickDebounce() {
         _isClickAllowed.value = false
-        handler.postDelayed(
-            { _isClickAllowed.value = true },
-            Constants.CLICK_DEBOUNCE_DELAY
-        )
+        clickDebounceJob?.cancel()
+        clickDebounceJob = viewModelScope.launch {
+            delay(Constants.CLICK_DEBOUNCE_DELAY)
+            _isClickAllowed.value = true
+        }
     }
 
     private fun addTrackToHistory(track: Track) {
@@ -103,7 +99,8 @@ class SearchViewModel(
     }
 
     fun clearSearch() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
+        searchJob = null
         val history = getSearchHistoryInteractor.execute()
         if (history.isNotEmpty()) {
             _screenState.postValue(SearchScreenState.ShowHistory(history))
@@ -128,7 +125,8 @@ class SearchViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
+        clickDebounceJob?.cancel()
     }
 }
 
