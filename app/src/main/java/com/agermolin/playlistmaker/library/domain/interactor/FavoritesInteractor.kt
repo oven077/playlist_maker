@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.map
 interface IFavoritesInteractor {
     suspend fun addTrack(track: Track)
     suspend fun removeTrack(track: Track)
+    suspend fun isTrackFavorite(trackId: Long): Boolean
     fun getFavoriteTracks(): Flow<List<Track>>
 }
 
@@ -22,6 +23,9 @@ class FavoritesInteractor(
     override suspend fun removeTrack(track: Track) {
         favoritesRepository.removeTrack(track)
     }
+
+    override suspend fun isTrackFavorite(trackId: Long): Boolean =
+        favoritesRepository.isTrackFavorite(trackId)
 
     override fun getFavoriteTracks(): Flow<List<Track>> =
         favoritesRepository.getFavoriteTracks().map { tracks ->

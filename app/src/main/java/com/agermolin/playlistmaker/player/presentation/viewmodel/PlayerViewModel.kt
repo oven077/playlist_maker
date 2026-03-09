@@ -39,19 +39,23 @@ class PlayerViewModel(
     private var progressJob: Job? = null
 
     fun initTrack(track: Track) {
-        _screenState.value = PlayerScreenState(
-            track = track,
-            isPrepared = false,
-            isPlaying = false,
-            currentPosition = 0,
-            wasPrepared = false,
-            error = null
-        )
+        viewModelScope.launch {
+            val isFavorite = favoritesInteractor.isTrackFavorite(track.trackId)
+            val trackWithFavorite = track.copy(isFavorite = isFavorite)
+            _screenState.value = PlayerScreenState(
+                track = trackWithFavorite,
+                isPrepared = false,
+                isPlaying = false,
+                currentPosition = 0,
+                wasPrepared = false,
+                error = null
+            )
 
-        if (track.previewUrl.isNotEmpty()) {
-            preparePlayer(track.previewUrl)
-        } else {
-            _screenState.value = _screenState.value?.copy(error = "Preview not available")
+            if (trackWithFavorite.previewUrl.isNotEmpty()) {
+                preparePlayer(trackWithFavorite.previewUrl)
+            } else {
+                _screenState.value = _screenState.value?.copy(error = "Preview not available")
+            }
         }
     }
 

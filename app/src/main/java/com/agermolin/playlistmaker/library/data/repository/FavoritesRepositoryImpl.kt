@@ -21,6 +21,9 @@ class FavoritesRepositoryImpl(
         dao.delete(FavoriteTrackMapper.mapToEntity(track))
     }
 
+    override suspend fun isTrackFavorite(trackId: Long): Boolean =
+        dao.getFavoriteTrackIds().contains(trackId)
+
     override fun getFavoriteTracks(): Flow<List<Track>> =
         dao.getAll().map { FavoriteTrackMapper.map(it) }
 }
