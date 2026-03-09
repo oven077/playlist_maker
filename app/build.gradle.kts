@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.example.playlistmaker"
+    namespace = "com.agermolin.playlistmaker"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.playlistmaker"
+        applicationId = "com.agermolin.playlistmaker"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.room.common.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,5 +72,10 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
 }
