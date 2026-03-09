@@ -14,5 +14,8 @@
         <!-- Customize your theme here. -->
         <!-- Customize your theme here. -->
         <item name="button_player">@color/dark_grey</item>
+        <!-- Surface colors for lists/screens -->
+        <item name="colorSurface">@color/screen_background</item>
+        <item name="colorOnSurface">@color/text_color_primary</item>
     </style>
 </resources>

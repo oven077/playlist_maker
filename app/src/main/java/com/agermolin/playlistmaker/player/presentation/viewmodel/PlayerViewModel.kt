@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.core.entity.Track
+import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
 import com.agermolin.playlistmaker.player.domain.interactor.IGetCurrentPositionInteractor
 import com.agermolin.playlistmaker.player.domain.interactor.IGetPlayerStateInteractor
 import com.agermolin.playlistmaker.player.domain.interactor.IPauseTrackInteractor
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     application: Application,
+    private val favoritesInteractor: IFavoritesInteractor,
     private val preparePlayerInteractor: IPreparePlayerInteractor,
     private val playTrackInteractor: IPlayTrackInteractor,
     private val pauseTrackInteractor: IPauseTrackInteractor,
@@ -128,6 +130,20 @@ class PlayerViewModel(
         _screenState.value = _screenState.value?.copy(isPlaying = false)
         progressJob?.cancel()
         progressJob = null
+    }
+
+    fun onFavoriteClicked() {
+        val st = _screenState.value ?: return
+        val track = st.track ?: return
+        viewModelScope.launch {
+            if (track.isFavorite) {
+                favoritesInteractor.removeTrack(track)
+            } else {
+                favoritesInteractor.addTrack(track)
+            }
+            val updatedTrack = track.copy(isFavorite = !track.isFavorite)
+            _screenState.postValue(st.copy(track = updatedTrack))
+        }
     }
 
     fun onPause() {

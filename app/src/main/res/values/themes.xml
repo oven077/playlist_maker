@@ -14,6 +14,9 @@
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <!-- Button player color -->
         <item name="button_player">@color/grey</item>
+        <!-- Surface colors for lists/screens -->
+        <item name="colorSurface">@color/screen_background</item>
+        <item name="colorOnSurface">@color/text_color_primary</item>
     </style>
 
 

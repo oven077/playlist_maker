@@ -1,5 +1,6 @@
 package com.agermolin.playlistmaker.player.presentation.fragment
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import androidx.core.content.ContextCompat
 import com.agermolin.playlistmaker.R
 import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.core.entity.Track
@@ -49,6 +51,10 @@ class PlayerFragment : Fragment() {
         binding.playTrack.isEnabled = false
         binding.playTrack.setOnClickListener {
             viewModel.togglePlayback()
+        }
+
+        binding.buttonAddToFavorites.setOnClickListener {
+            viewModel.onFavoriteClicked()
         }
 
         val trackJson = requireArguments().getString(Constants.TRACK)
@@ -111,6 +117,15 @@ class PlayerFragment : Fragment() {
                 binding.playTrack.setImageResource(iconRes)
 
                 binding.progress.text = timeFormat.format(state.currentPosition.toLong())
+
+                val favoriteIconRes = if (it.isFavorite) R.drawable.favorites_filled else R.drawable.favorites
+                binding.buttonAddToFavorites.setImageResource(favoriteIconRes)
+                val favoriteTint = if (it.isFavorite) {
+                    ContextCompat.getColor(requireContext(), R.color.favorite_heart_color)
+                } else {
+                    ContextCompat.getColor(requireContext(), R.color.white)
+                }
+                binding.buttonAddToFavorites.imageTintList = ColorStateList.valueOf(favoriteTint)
             }
         }
     }
