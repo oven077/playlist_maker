@@ -20,6 +20,8 @@ import com.agermolin.playlistmaker.search.domain.interactor.ClearSearchHistoryIn
 import com.agermolin.playlistmaker.search.domain.interactor.IClearSearchHistoryInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.GetSearchHistoryInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.FavoritesInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.SearchTracksInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 import com.agermolin.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
@@ -29,7 +31,12 @@ import com.agermolin.playlistmaker.settings.domain.interactor.ISetDarkThemeInter
 import org.koin.dsl.module
 
 val domainModule = module {
-    
+
+    // Favorites Interactor
+    factory<IFavoritesInteractor> {
+        FavoritesInteractor(get())
+    }
+
     // Search Interactors
     factory<ISearchTracksInteractor> {
         SearchTracksInteractor(get())

@@ -9,6 +9,8 @@ import com.agermolin.playlistmaker.search.data.api.ApiConstants
 import com.agermolin.playlistmaker.search.data.api.iTunesSearchAPI
 import com.agermolin.playlistmaker.search.data.datasource.LocalDataSource
 import com.agermolin.playlistmaker.search.data.datasource.RemoteDataSource
+import com.agermolin.playlistmaker.library.data.repository.FavoritesRepositoryImpl
+import com.agermolin.playlistmaker.library.domain.repository.FavoritesRepository
 import com.agermolin.playlistmaker.search.data.repository.HistoryRepositoryImpl
 import com.agermolin.playlistmaker.search.data.repository.SearchRepositoryImpl
 import com.agermolin.playlistmaker.search.domain.repository.HistoryRepository
@@ -26,10 +28,10 @@ val dataModule = module {
     // Room Database
     single<AppDatabase> {
         Room.databaseBuilder(
-            androidContext(),
-            AppDatabase::class.java,
-            "playlist_maker.db"
-        ).build()
+                androidContext(),
+                AppDatabase::class.java,
+                "playlist_maker.db"
+            ).fallbackToDestructiveMigration(false).build()
     }
 
     // Retrofit (только для Search)
@@ -55,12 +57,16 @@ val dataModule = module {
     }
     
     // Repositories
+    single<FavoritesRepository> {
+        FavoritesRepositoryImpl(get())
+    }
+
     single<SearchRepository> {
-        SearchRepositoryImpl(get())
+        SearchRepositoryImpl(get(), get())
     }
     
     factory<HistoryRepository> {
-        HistoryRepositoryImpl(get())
+        HistoryRepositoryImpl(get(), get())
     }
     
     // Settings Data Source and Repository
