@@ -19,14 +19,16 @@ class FavoritesTracksViewModel(
     init {
         favoritesInteractor.getFavoriteTracks()
             .onEach { tracks ->
-                _screenState.value = if (tracks.isEmpty()) {
-                    FavoritesTracksScreenState.Empty
-                } else {
-                    FavoritesTracksScreenState.Content(tracks)
-                }
+                _screenState.postValue(
+                    if (tracks.isEmpty()) {
+                        FavoritesTracksScreenState.Empty
+                    } else {
+                        FavoritesTracksScreenState.Content(tracks)
+                    }
+                )
             }
             .catch { _ ->
-                _screenState.value = FavoritesTracksScreenState.Empty
+                _screenState.postValue(FavoritesTracksScreenState.Empty)
             }
             .launchIn(viewModelScope)
     }

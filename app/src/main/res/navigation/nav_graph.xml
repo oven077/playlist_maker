@@ -16,7 +16,11 @@
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.agermolin.playlistmaker.library.presentation.fragment.LibraryFragment"
-        android:label="@string/library" />
+        android:label="@string/library">
+        <action
+            android:id="@+id/action_libraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"

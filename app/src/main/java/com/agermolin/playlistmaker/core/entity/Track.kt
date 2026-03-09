@@ -1,7 +1,7 @@
 package com.agermolin.playlistmaker.core.entity
 
 data class Track(
-    val trackId: Int,
+    val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,

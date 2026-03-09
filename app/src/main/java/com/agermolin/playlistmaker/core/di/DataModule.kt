@@ -31,7 +31,7 @@ val dataModule = module {
                 androidContext(),
                 AppDatabase::class.java,
                 "playlist_maker.db"
-            ).fallbackToDestructiveMigration(false).build()
+            ).fallbackToDestructiveMigration().build()
     }
 
     // Retrofit (только для Search)
