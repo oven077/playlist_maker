@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.playlistmaker.search.presentation.fragment.SearchFragment"
+        android:name="com.agermolin.playlistmaker.search.presentation.fragment.SearchFragment"
         android:label="@string/search">
         <action
             android:id="@+id/action_searchFragment_to_playerFragment"
@@ -15,17 +15,21 @@
 
     <fragment
         android:id="@+id/libraryFragment"
-        android:name="com.example.playlistmaker.library.presentation.fragment.LibraryFragment"
-        android:label="@string/library" />
+        android:name="com.agermolin.playlistmaker.library.presentation.fragment.LibraryFragment"
+        android:label="@string/library">
+        <action
+            android:id="@+id/action_libraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.playlistmaker.settings.presentation.fragment.SettingsFragment"
+        android:name="com.agermolin.playlistmaker.settings.presentation.fragment.SettingsFragment"
         android:label="@string/settings" />
 
     <fragment
         android:id="@+id/playerFragment"
-        android:name="com.example.playlistmaker.player.presentation.fragment.PlayerFragment"
+        android:name="com.agermolin.playlistmaker.player.presentation.fragment.PlayerFragment"
         android:label="@string/play">
         <argument
             android:name="TRACK"
