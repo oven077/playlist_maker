@@ -1,0 +1,112 @@
+package com.agermolin.playlistmaker.library.presentation.fragment
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.agermolin.playlistmaker.R
+import com.agermolin.playlistmaker.core.Constants
+import com.agermolin.playlistmaker.core.entity.Track
+import com.agermolin.playlistmaker.databinding.FragmentPlaylistDetailBinding
+import com.agermolin.playlistmaker.library.domain.model.PlaylistDetailResult
+import com.agermolin.playlistmaker.library.presentation.viewmodel.PlaylistDetailViewModel
+import com.agermolin.playlistmaker.search.presentation.adapter.SearchRecyclerAdapter
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import java.io.File
+
+class PlaylistDetailFragment : Fragment() {
+
+    private val viewModel: PlaylistDetailViewModel by viewModel {
+        parametersOf(requireArguments().getLong(Constants.PLAYLIST_ID))
+    }
+
+    private var _binding: FragmentPlaylistDetailBinding? = null
+    private val binding: FragmentPlaylistDetailBinding get() = requireNotNull(_binding)
+
+    private val tracks = ArrayList<Track>()
+    private lateinit var adapter: SearchRecyclerAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentPlaylistDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.playlistDetailToolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        adapter = SearchRecyclerAdapter(tracks) { track ->
+            findNavController().navigate(
+                R.id.action_playlistDetailFragment_to_playerFragment,
+                bundleOf(Constants.TRACK to Gson().toJson(track)),
+            )
+        }
+        binding.playlistDetailTracks.layoutManager = LinearLayoutManager(requireContext())
+        binding.playlistDetailTracks.adapter = adapter
+
+        viewModel.screenState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is PlaylistDetailResult.NotFound -> findNavController().popBackStack()
+                is PlaylistDetailResult.Content -> renderContent(state)
+                null -> Unit
+            }
+        }
+    }
+
+    private fun renderContent(content: PlaylistDetailResult.Content) {
+        val playlist = content.playlist
+        binding.playlistDetailToolbar.title = playlist.name
+
+        if (playlist.description.isNotBlank()) {
+            binding.playlistDetailDescription.text = playlist.description
+            binding.playlistDetailDescription.isVisible = true
+        } else {
+            binding.playlistDetailDescription.isVisible = false
+        }
+
+        bindCover(playlist.coverImagePath)
+
+        val hasTracks = content.tracks.isNotEmpty()
+        binding.playlistDetailPlaceholder.isVisible = !hasTracks
+        binding.playlistDetailTracks.isVisible = hasTracks
+        if (hasTracks) {
+            tracks.clear()
+            tracks.addAll(content.tracks)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun bindCover(path: String?) {
+        val file = path?.let { File(it) }
+        if (file != null && file.exists() && file.length() > 0L) {
+            Glide.with(this)
+                .load(file)
+                .centerCrop()
+                .into(binding.playlistDetailCover)
+        } else {
+            Glide.with(binding.playlistDetailCover).clear(binding.playlistDetailCover)
+            binding.playlistDetailCover.setImageResource(R.drawable.playlist_grid_cover_placeholder)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.playlistDetailTracks.adapter = null
+        _binding = null
+    }
+}

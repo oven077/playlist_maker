@@ -11,6 +11,8 @@
         android:id="@+id/new_playlist_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/screen_background"
+        android:elevation="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:navigationIconTint="@color/toolbar_color"
         app:title="@string/new_playlist_screen_title"
@@ -74,8 +76,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24"
                 android:hint="@string/playlist_name_hint"
+                app:boxBackgroundColor="@color/screen_background"
                 app:boxStrokeColor="@color/new_playlist_input_box_stroke"
-                app:hintTextColor="@color/search_form_text_hint_color"
+                app:boxStrokeWidthFocused="2dp"
+                app:hintTextColor="@color/new_playlist_input_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/playlist_cover_placeholder">
@@ -98,8 +102,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_16"
                 android:hint="@string/playlist_description_hint"
+                app:boxBackgroundColor="@color/screen_background"
                 app:boxStrokeColor="@color/new_playlist_input_box_stroke"
-                app:hintTextColor="@color/search_form_text_hint_color"
+                app:boxStrokeWidthFocused="2dp"
+                app:hintTextColor="@color/new_playlist_input_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_layout_name">
@@ -119,7 +125,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_playlist"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24"
@@ -133,12 +139,11 @@
                 android:textSize="@dimen/text_size_16"
                 android:textFontWeight="500"
                 android:textColor="@color/new_playlist_create_button_text"
+                app:backgroundTint="@color/new_playlist_create_button_background"
                 app:cornerRadius="@dimen/corner_radius_8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_layout_description"
-                app:strokeColor="@color/new_playlist_create_button_stroke"
-                app:strokeWidth="1dp" />
+                app:layout_constraintTop_toBottomOf="@id/input_layout_description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

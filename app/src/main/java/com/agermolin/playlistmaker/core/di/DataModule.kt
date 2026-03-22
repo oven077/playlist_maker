@@ -10,6 +10,7 @@ import com.agermolin.playlistmaker.search.data.api.iTunesSearchAPI
 import com.agermolin.playlistmaker.search.data.datasource.LocalDataSource
 import com.agermolin.playlistmaker.search.data.datasource.RemoteDataSource
 import com.agermolin.playlistmaker.core.data.db.MIGRATION_3_4
+import com.agermolin.playlistmaker.core.data.db.MIGRATION_4_5
 import com.agermolin.playlistmaker.library.data.repository.FavoritesRepositoryImpl
 import com.agermolin.playlistmaker.library.data.repository.PlaylistRepositoryImpl
 import com.agermolin.playlistmaker.library.domain.repository.FavoritesRepository
@@ -38,7 +39,7 @@ val dataModule = module {
                 AppDatabase::class.java,
                 "playlist_maker.db",
             )
-            .addMigrations(MIGRATION_3_4)
+            .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
             .build()
     }
 
@@ -70,7 +71,7 @@ val dataModule = module {
     }
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(androidContext(), get<AppDatabase>().playlistDao(), get())
+        PlaylistRepositoryImpl(androidContext(), get(), get())
     }
 
     single<SearchRepository> {

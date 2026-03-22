@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSecondary"
-    android:theme="@style/Theme.PlaylistMaker"
     tools:context=".player.presentation.fragment.PlayerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSecondary"
+        android:theme="@style/Theme.PlaylistMaker">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/player_toolbar"
@@ -252,4 +256,56 @@
         app:layout_constraintTop_toTopOf="@id/country"
         tools:text="Название страны" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/player_playlists_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/player_playlists_overlay_scrim"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/playlists_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_playlists_bg"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_8"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="@dimen/player_playlist_bottom_sheet_peek"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/padding_16"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/add_to_playlist"
+            android:textColor="@color/text_color_primary"
+            android:textFontWeight="500"
+            android:textSize="@dimen/text_size_19" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_bottom_sheet_new_playlist"
+            style="@style/ErrorButtonPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/padding_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/new_playlist" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/player_playlists_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="true"
+            android:paddingBottom="@dimen/margin_16" />
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

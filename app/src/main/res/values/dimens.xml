@@ -46,4 +46,9 @@
     <dimen name="playlist_grid_placeholder_icon_width">104dp</dimen>
     <dimen name="playlist_grid_placeholder_icon_height">103dp</dimen>
 
+    <dimen name="player_playlist_bottom_sheet_peek">240dp</dimen>
+    <dimen name="playlist_picker_row_cover_size">56dp</dimen>
+
+    <dimen name="playlist_detail_cover_height">200dp</dimen>
+
 </resources>

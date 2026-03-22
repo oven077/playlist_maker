@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.agermolin.playlistmaker.R
+import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.agermolin.playlistmaker.library.presentation.adapter.PlaylistsAdapter
 import com.agermolin.playlistmaker.library.presentation.decoration.GridSpacingItemDecoration
@@ -22,7 +24,12 @@ class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding: FragmentPlaylistsBinding get() = requireNotNull(_binding)
 
-    private val adapter = PlaylistsAdapter()
+    private val adapter = PlaylistsAdapter { playlist ->
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistDetailFragment,
+            bundleOf(Constants.PLAYLIST_ID to playlist.id),
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

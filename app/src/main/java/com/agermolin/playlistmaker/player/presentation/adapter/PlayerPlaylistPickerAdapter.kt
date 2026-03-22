@@ -1,4 +1,4 @@
-package com.agermolin.playlistmaker.library.presentation.adapter
+package com.agermolin.playlistmaker.player.presentation.adapter
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.agermolin.playlistmaker.R
-import com.agermolin.playlistmaker.databinding.ItemPlaylistGridBinding
+import com.agermolin.playlistmaker.databinding.ItemPlaylistPickerRowBinding
 import com.agermolin.playlistmaker.library.domain.model.Playlist
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -17,46 +17,46 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import java.io.File
 
-class PlaylistsAdapter(
+class PlayerPlaylistPickerAdapter(
     private val onPlaylistClick: (Playlist) -> Unit,
-) : ListAdapter<Playlist, PlaylistsAdapter.PlaylistGridViewHolder>(Diff) {
+) : ListAdapter<Playlist, PlayerPlaylistPickerAdapter.RowViewHolder>(Diff) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistGridViewHolder {
-        val binding = ItemPlaylistGridBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowViewHolder {
+        val binding = ItemPlaylistPickerRowBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false,
         )
-        return PlaylistGridViewHolder(binding, onPlaylistClick)
+        return RowViewHolder(binding, onPlaylistClick)
     }
 
-    override fun onBindViewHolder(holder: PlaylistGridViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RowViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    override fun onViewRecycled(holder: PlaylistGridViewHolder) {
+    override fun onViewRecycled(holder: RowViewHolder) {
         holder.clearCoverRequest()
         super.onViewRecycled(holder)
     }
 
-    class PlaylistGridViewHolder(
-        private val binding: ItemPlaylistGridBinding,
+    class RowViewHolder(
+        private val binding: ItemPlaylistPickerRowBinding,
         private val onPlaylistClick: (Playlist) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(playlist: Playlist) {
             binding.root.setOnClickListener { onPlaylistClick(playlist) }
-            Glide.with(binding.playlistItemCover).clear(binding.playlistItemCover)
-            binding.playlistItemCover.setImageDrawable(null)
 
-            binding.playlistItemTitle.text = playlist.name
-            binding.playlistItemTrackCount.text = itemView.context.resources.getQuantityString(
+            binding.playlistPickerTitle.text = playlist.name
+            binding.playlistPickerTrackCount.text = itemView.context.resources.getQuantityString(
                 R.plurals.playlist_track_count,
                 playlist.trackCount,
                 playlist.trackCount,
             )
 
-            binding.playlistItemCover.setPadding(0, 0, 0, 0)
+            Glide.with(binding.playlistPickerCover).clear(binding.playlistPickerCover)
+            binding.playlistPickerCover.setImageDrawable(null)
+
             val path = playlist.coverImagePath
             val file = path?.let { File(it) }
             if (file != null && file.exists() && file.length() > 0L) {
@@ -67,9 +67,9 @@ class PlaylistsAdapter(
         }
 
         private fun loadCoverFromFile(file: File) {
-            binding.playlistItemCover.background = null
-            binding.playlistItemCover.scaleType = ImageView.ScaleType.CENTER_CROP
-            Glide.with(binding.playlistItemCover)
+            binding.playlistPickerCover.background = null
+            binding.playlistPickerCover.scaleType = ImageView.ScaleType.CENTER_CROP
+            Glide.with(binding.playlistPickerCover)
                 .load(file)
                 .centerCrop()
                 .listener(
@@ -93,20 +93,19 @@ class PlaylistsAdapter(
                         ): Boolean = false
                     },
                 )
-                .into(binding.playlistItemCover)
+                .into(binding.playlistPickerCover)
         }
 
         private fun applyCoverPlaceholder() {
-            Glide.with(binding.playlistItemCover).clear(binding.playlistItemCover)
-            binding.playlistItemCover.setImageDrawable(null)
-            binding.playlistItemCover.background = null
-            binding.playlistItemCover.setPadding(0, 0, 0, 0)
-            binding.playlistItemCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            binding.playlistItemCover.setImageResource(R.drawable.playlist_grid_cover_placeholder)
+            Glide.with(binding.playlistPickerCover).clear(binding.playlistPickerCover)
+            binding.playlistPickerCover.setImageDrawable(null)
+            binding.playlistPickerCover.background = null
+            binding.playlistPickerCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            binding.playlistPickerCover.setImageResource(R.drawable.playlist_grid_cover_placeholder)
         }
 
         fun clearCoverRequest() {
-            Glide.with(binding.playlistItemCover).clear(binding.playlistItemCover)
+            Glide.with(binding.playlistPickerCover).clear(binding.playlistPickerCover)
         }
     }
 

@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewPlaylistFragment : Fragment() {
@@ -102,11 +103,14 @@ class NewPlaylistFragment : Fragment() {
 
         viewModel.saveSuccess.observe(viewLifecycleOwner) { name ->
             if (name == null) return@observe
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.playlist_created_toast, name),
-                Toast.LENGTH_SHORT,
-            ).show()
+            val message = getString(R.string.playlist_created_toast, name)
+            val content = requireActivity().findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(content, message, Snackbar.LENGTH_SHORT)
+            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+            if (bottomNav.isVisible) {
+                snackbar.setAnchorView(bottomNav)
+            }
+            snackbar.show()
             viewModel.consumeSaveSuccess()
             findNavController().navigateUp()
         }

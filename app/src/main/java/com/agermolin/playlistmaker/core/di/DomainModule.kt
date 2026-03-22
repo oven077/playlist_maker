@@ -20,12 +20,16 @@ import com.agermolin.playlistmaker.search.domain.interactor.ClearSearchHistoryIn
 import com.agermolin.playlistmaker.search.domain.interactor.IClearSearchHistoryInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.GetSearchHistoryInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.AddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.CreatePlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.FavoritesInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.GetPlaylistsInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IAddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.ICreatePlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IObservePlaylistDetailInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IGetPlaylistsInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.ObservePlaylistDetailInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.SearchTracksInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 import com.agermolin.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
@@ -47,6 +51,14 @@ val domainModule = module {
 
     factory<IGetPlaylistsInteractor> {
         GetPlaylistsInteractor(get())
+    }
+
+    factory<IAddTrackToPlaylistInteractor> {
+        AddTrackToPlaylistInteractor(get())
+    }
+
+    factory<IObservePlaylistDetailInteractor> {
+        ObservePlaylistDetailInteractor(get())
     }
 
     // Search Interactors
