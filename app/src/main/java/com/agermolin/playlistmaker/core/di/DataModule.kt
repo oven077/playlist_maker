@@ -9,8 +9,12 @@ import com.agermolin.playlistmaker.search.data.api.ApiConstants
 import com.agermolin.playlistmaker.search.data.api.iTunesSearchAPI
 import com.agermolin.playlistmaker.search.data.datasource.LocalDataSource
 import com.agermolin.playlistmaker.search.data.datasource.RemoteDataSource
+import com.agermolin.playlistmaker.core.data.db.MIGRATION_3_4
 import com.agermolin.playlistmaker.library.data.repository.FavoritesRepositoryImpl
+import com.agermolin.playlistmaker.library.data.repository.PlaylistRepositoryImpl
 import com.agermolin.playlistmaker.library.domain.repository.FavoritesRepository
+import com.agermolin.playlistmaker.library.domain.repository.PlaylistRepository
+import com.google.gson.Gson
 import com.agermolin.playlistmaker.search.data.repository.HistoryRepositoryImpl
 import com.agermolin.playlistmaker.search.data.repository.SearchRepositoryImpl
 import com.agermolin.playlistmaker.search.domain.repository.HistoryRepository
@@ -25,13 +29,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
 
+    single<Gson> { Gson() }
+
     // Room Database
     single<AppDatabase> {
         Room.databaseBuilder(
                 androidContext(),
                 AppDatabase::class.java,
-                "playlist_maker.db"
-            ).fallbackToDestructiveMigration().build()
+                "playlist_maker.db",
+            )
+            .addMigrations(MIGRATION_3_4)
+            .build()
     }
 
     // Retrofit (только для Search)
@@ -59,6 +67,10 @@ val dataModule = module {
     // Repositories
     single<FavoritesRepository> {
         FavoritesRepositoryImpl(get())
+    }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(androidContext(), get<AppDatabase>().playlistDao(), get())
     }
 
     single<SearchRepository> {

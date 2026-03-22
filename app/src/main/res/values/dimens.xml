@@ -40,6 +40,10 @@
     <!-- Figma: icon Top=210dp from screen top; fragment starts under toolbar+tabs (~104dp) -->
     <dimen name="placeholder_icon_margin_top_in_fragment">106dp</dimen>
 
+    <dimen name="new_playlist_cover_icon_size">80dp</dimen>
 
+    <!-- Размер «змейки» (track_icon) в ячейке сетки — как в макете Figma -->
+    <dimen name="playlist_grid_placeholder_icon_width">104dp</dimen>
+    <dimen name="playlist_grid_placeholder_icon_height">103dp</dimen>
 
 </resources>

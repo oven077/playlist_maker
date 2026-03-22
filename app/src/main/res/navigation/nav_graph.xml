@@ -20,7 +20,15 @@
         <action
             android:id="@+id/action_libraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.agermolin.playlistmaker.library.presentation.fragment.NewPlaylistFragment"
+        android:label="@string/new_playlist_screen_title" />
 
     <fragment
         android:id="@+id/settingsFragment"

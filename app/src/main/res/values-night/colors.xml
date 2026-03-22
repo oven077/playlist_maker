@@ -26,4 +26,8 @@
     <!-- Keep unselected tab text color identical to light theme -->
     <color name="library_tab_text_unselected">#AEAFB4</color>
     <color name="library_tab_text_selected">#FFFFFF</color>
+
+    <color name="new_playlist_cover_stroke">#9AACB8</color>
+    <color name="new_playlist_cover_icon_tint">#9AACB8</color>
+    <color name="new_playlist_input_stroke">#9AACB8</color>
 </resources>
