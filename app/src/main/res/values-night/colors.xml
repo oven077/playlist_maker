@@ -31,7 +31,9 @@
     <color name="new_playlist_cover_icon_tint">#9AACB8</color>
     <color name="new_playlist_input_stroke">#9AACB8</color>
 
-    <!-- Кнопка «Создать»: только активное состояние; неактивная — из values (тот же серый + белый текст) -->
-    <color name="new_playlist_create_bg_enabled">#FFFFFF</color>
-    <color name="new_playlist_create_text_enabled">#1A1B22</color>
+    <!-- Кнопка «Создать»: активная — синяя заливка как в светлой теме и в макете -->
+    <color name="new_playlist_create_bg_enabled">@color/blue</color>
+    <color name="new_playlist_create_text_enabled">#FFFFFF</color>
+
+    <color name="bottom_nav_bar_background">#000000</color>
 </resources>

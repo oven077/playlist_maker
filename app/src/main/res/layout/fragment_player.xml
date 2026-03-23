@@ -270,10 +270,12 @@
     <LinearLayout
         android:id="@+id/playlists_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_playlists_bg"
         android:orientation="vertical"
         android:paddingTop="@dimen/margin_8"
+        android:paddingBottom="@dimen/margin_8"
+        app:behavior_fitToContents="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/player_playlist_bottom_sheet_peek"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -290,7 +292,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_bottom_sheet_new_playlist"
-            style="@style/ErrorButtonPlaceholder"
+            style="@style/Widget.PlaylistMaker.BottomSheet.NewPlaylistButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_16"
@@ -300,10 +302,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/player_playlists_recycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_16"
-            android:layout_weight="1"
             android:clipToPadding="false"
+            android:maxHeight="@dimen/player_playlist_sheet_list_max_height"
             android:nestedScrollingEnabled="true"
             android:paddingBottom="@dimen/margin_16" />
     </LinearLayout>

@@ -11,6 +11,9 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >@color/status_bar_color</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <!-- Customize your theme here. -->
         <!-- Customize your theme here. -->
         <item name="button_player">@color/dark_grey</item>

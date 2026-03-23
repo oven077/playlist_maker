@@ -7,14 +7,14 @@
     app:cardBackgroundColor="@color/screen_background"
     app:cardCornerRadius="@dimen/corner_radius_8"
     app:cardElevation="0dp"
-    app:strokeColor="@color/new_playlist_cover_stroke"
-    app:strokeWidth="1dp">
+    app:strokeColor="@android:color/transparent"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/playlist_item_cover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -24,6 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.PlaylistGridCoverTop"
             tools:src="@drawable/nothingfound" />
 
         <TextView

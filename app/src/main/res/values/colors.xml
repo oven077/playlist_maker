@@ -34,13 +34,15 @@
     <color name="new_playlist_cover_icon_tint">#AEAFB4</color>
     <color name="new_playlist_input_stroke">#AEAFB4</color>
 
-    <!-- Кнопка «Создать»: неактивная — один цвет в обеих темах (как в макете); активная в night переопределяется -->
+    <!-- Кнопка «Создать»: неактивная — серый; активная в светлой теме — синий (макет); в night — см. values-night -->
     <color name="new_playlist_create_bg_disabled">#AEAFB4</color>
     <color name="new_playlist_create_text_disabled">#FFFFFF</color>
-    <color name="new_playlist_create_bg_enabled">#1A1B22</color>
+    <color name="new_playlist_create_bg_enabled">@color/blue</color>
     <color name="new_playlist_create_text_enabled">#FFFFFF</color>
 
     <color name="player_playlists_overlay_scrim">#99000000</color>
+
+    <color name="bottom_nav_bar_background">#FFFFFF</color>
 
 </resources>
 

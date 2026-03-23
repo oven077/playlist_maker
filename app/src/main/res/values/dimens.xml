@@ -41,13 +41,20 @@
     <dimen name="placeholder_icon_margin_top_in_fragment">106dp</dimen>
 
     <dimen name="new_playlist_cover_icon_size">80dp</dimen>
+    <dimen name="new_playlist_cover_corner_radius">16dp</dimen>
+    <dimen name="new_playlist_description_min_height">104dp</dimen>
+    <dimen name="new_playlist_create_button_min_height">52dp</dimen>
 
     <!-- Размер «змейки» (track_icon) в ячейке сетки — как в макете Figma -->
     <dimen name="playlist_grid_placeholder_icon_width">104dp</dimen>
     <dimen name="playlist_grid_placeholder_icon_height">103dp</dimen>
 
-    <dimen name="player_playlist_bottom_sheet_peek">240dp</dimen>
-    <dimen name="playlist_picker_row_cover_size">56dp</dimen>
+    <dimen name="player_playlist_bottom_sheet_peek">320dp</dimen>
+    <dimen name="player_playlist_sheet_list_max_height">280dp</dimen>
+    <dimen name="player_bottom_sheet_new_playlist_button_height">48dp</dimen>
+    <dimen name="player_bottom_sheet_new_playlist_corner_radius">24dp</dimen>
+    <dimen name="playlist_picker_row_cover_size">60dp</dimen>
+    <dimen name="playlist_picker_row_min_height">72dp</dimen>
 
     <dimen name="playlist_detail_cover_height">200dp</dimen>
 

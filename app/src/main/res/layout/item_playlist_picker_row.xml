@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
+    android:minHeight="@dimen/playlist_picker_row_min_height"
     android:paddingHorizontal="@dimen/padding_16"
-    android:paddingVertical="@dimen/margin_8">
+    android:paddingVertical="@dimen/margin_12">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/playlist_picker_cover"
         android:layout_width="@dimen/playlist_picker_row_cover_size"
         android:layout_height="@dimen/playlist_picker_row_cover_size"
@@ -17,6 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.PlaylistPickerCover"
         tools:src="@drawable/playlist_grid_cover_placeholder" />
 
     <TextView

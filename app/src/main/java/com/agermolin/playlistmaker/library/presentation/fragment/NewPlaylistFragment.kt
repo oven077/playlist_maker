@@ -69,7 +69,7 @@ class NewPlaylistFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.newPlaylistScroll) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
             v.updatePadding(bottom = imeBottom)
             insets
@@ -136,7 +136,7 @@ class NewPlaylistFragment : Fragment() {
             findNavController().navigateUp()
             return
         }
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_PlaylistMaker_LightAlertDialog)
             .setTitle(R.string.discard_new_playlist_title)
             .setMessage(R.string.discard_new_playlist_message)
             .setNegativeButton(R.string.discard_new_playlist_cancel) { dialog, _ ->
@@ -149,7 +149,7 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun bindCoverImage(uri: Uri?) {
-        val radiusPx = resources.getDimensionPixelSize(R.dimen.corner_radius_8)
+        val radiusPx = resources.getDimensionPixelSize(R.dimen.new_playlist_cover_corner_radius)
         if (uri == null) {
             Glide.with(this).clear(binding.playlistCoverPreview)
             binding.playlistCoverPreview.setImageDrawable(null)
