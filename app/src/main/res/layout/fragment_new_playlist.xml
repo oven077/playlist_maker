@@ -30,7 +30,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_16"
+            android:paddingHorizontal="@dimen/new_playlist_screen_horizontal_padding"
             android:paddingBottom="@dimen/margin_16">
 
             <FrameLayout
@@ -132,7 +132,7 @@
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/padding_16"
+        android:layout_marginHorizontal="@dimen/new_playlist_screen_horizontal_padding"
         android:layout_marginTop="@dimen/margin_8"
         android:layout_marginBottom="@dimen/margin_16"
         android:enabled="false"

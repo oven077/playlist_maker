@@ -36,4 +36,6 @@
     <color name="new_playlist_create_text_enabled">#FFFFFF</color>
 
     <color name="bottom_nav_bar_background">#000000</color>
+
+    <color name="bottom_sheet_handle_color">#AEAFB4</color>
 </resources>

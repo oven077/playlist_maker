@@ -273,31 +273,45 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_playlists_bg"
         android:orientation="vertical"
-        android:paddingTop="@dimen/margin_8"
+        android:paddingTop="@dimen/playlists_bottom_sheet_padding_top"
         android:paddingBottom="@dimen/margin_8"
         app:behavior_fitToContents="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/player_playlist_bottom_sheet_peek"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_width="@dimen/bottom_sheet_handle_width"
+            android:layout_height="@dimen/bottom_sheet_handle_height"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_bottom_sheet_handle"
+            android:importantForAccessibility="no" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_16"
+            android:layout_marginTop="@dimen/margin_12"
             android:fontFamily="@font/ys_display_medium"
+            android:gravity="center_horizontal"
             android:text="@string/add_to_playlist"
             android:textColor="@color/text_color_primary"
             android:textFontWeight="500"
             android:textSize="@dimen/text_size_19" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_bottom_sheet_new_playlist"
-            style="@style/Widget.PlaylistMaker.BottomSheet.NewPlaylistButton"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/padding_16"
-            android:layout_marginTop="@dimen/margin_16"
-            android:text="@string/new_playlist" />
+            android:layout_marginTop="@dimen/margin_16">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_bottom_sheet_new_playlist"
+                style="@style/Widget.PlaylistMaker.BottomSheet.NewPlaylistButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/player_bottom_sheet_new_playlist_button_height"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/new_playlist" />
+        </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/player_playlists_recycler"

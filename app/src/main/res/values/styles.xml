@@ -148,8 +148,15 @@
         <item name="backgroundTint">@color/button_background_color</item>
         <item name="cornerRadius">@dimen/player_bottom_sheet_new_playlist_corner_radius</item>
         <item name="android:minHeight">@dimen/player_bottom_sheet_new_playlist_button_height</item>
-        <item name="android:paddingTop">@dimen/padding_12</item>
-        <item name="android:paddingBottom">@dimen/padding_12</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">@dimen/padding_20</item>
+        <item name="android:paddingRight">@dimen/padding_20</item>
+        <item name="android:paddingTop">@dimen/padding_8</item>
+        <item name="android:paddingBottom">@dimen/padding_8</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.PlaylistGridCoverTop" parent="">

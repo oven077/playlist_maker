@@ -44,6 +44,8 @@
 
     <color name="bottom_nav_bar_background">#FFFFFF</color>
 
+    <color name="bottom_sheet_handle_color">#E6E8EB</color>
+
 </resources>
 
 
