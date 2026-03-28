@@ -22,6 +22,7 @@
     <dimen name="corner_radius_16">16dp</dimen>
     <dimen name="corner_radius_2">2dp</dimen>
     <dimen name="corner_radius_8">8dp</dimen>
+    <dimen name="corner_radius_12">12dp</dimen>
 
     <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_20">20dp</dimen>
@@ -42,8 +43,6 @@
 
     <dimen name="new_playlist_cover_icon_size">80dp</dimen>
     <dimen name="new_playlist_cover_corner_radius">8dp</dimen>
-    <!-- Макет Figma: поле описания заметно выше однострочного названия -->
-    <dimen name="new_playlist_description_min_height">140dp</dimen>
     <dimen name="new_playlist_screen_horizontal_padding">24dp</dimen>
     <dimen name="new_playlist_create_button_min_height">52dp</dimen>
 
@@ -64,5 +63,11 @@
     <dimen name="playlist_picker_row_min_height">72dp</dimen>
 
     <dimen name="playlist_detail_cover_height">200dp</dimen>
+
+    <dimen name="playlist_grid_cover_corner_radius">12dp</dimen>
+    <dimen name="library_new_playlist_button_min_height">48dp</dimen>
+
+    <dimen name="bottom_navigation_min_height">56dp</dimen>
+    <dimen name="bottom_navigation_item_padding_vertical">8dp</dimen>
 
 </resources>

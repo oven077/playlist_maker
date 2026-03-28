@@ -2,10 +2,12 @@ package com.agermolin.playlistmaker.library.presentation.fragment
 
 import android.content.Intent
 import android.net.Uri
+import android.graphics.Outline
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -129,6 +131,18 @@ class NewPlaylistFragment : Fragment() {
 
         viewModel.onPlaylistNameChanged(binding.inputPlaylistName.text?.toString().orEmpty())
         viewModel.onDescriptionChanged(binding.inputPlaylistDescription.text?.toString().orEmpty())
+
+        binding.playlistCoverPlaceholder.post { applyPlaylistCoverOutline() }
+    }
+
+    private fun applyPlaylistCoverOutline() {
+        val radius = resources.getDimension(R.dimen.new_playlist_cover_corner_radius)
+        binding.playlistCoverPlaceholder.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, radius)
+            }
+        }
+        binding.playlistCoverPlaceholder.clipToOutline = true
     }
 
     private fun tryNavigateBack() {
@@ -156,6 +170,7 @@ class NewPlaylistFragment : Fragment() {
             binding.playlistCoverPreview.isVisible = false
             binding.playlistCoverPlaceholderIcon.isVisible = true
             binding.playlistCoverPlaceholder.setBackgroundResource(R.drawable.bg_playlist_cover_placeholder)
+            binding.playlistCoverPlaceholder.post { applyPlaylistCoverOutline() }
             return
         }
         binding.playlistCoverPreview.isVisible = true
@@ -166,6 +181,8 @@ class NewPlaylistFragment : Fragment() {
             .centerCrop()
             .apply(RequestOptions.bitmapTransform(RoundedCorners(radiusPx)))
             .into(binding.playlistCoverPreview)
+
+        binding.playlistCoverPlaceholder.post { applyPlaylistCoverOutline() }
     }
 
     override fun onDestroyView() {

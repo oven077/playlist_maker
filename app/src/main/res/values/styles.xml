@@ -160,19 +160,33 @@
     </style>
 
     <style name="ShapeAppearanceOverlay.PlaylistGridCoverTop" parent="">
-        <item name="cornerFamilyTopLeft">rounded</item>
-        <item name="cornerFamilyTopRight">rounded</item>
-        <item name="cornerSizeTopLeft">@dimen/corner_radius_8</item>
-        <item name="cornerSizeTopRight">@dimen/corner_radius_8</item>
-        <item name="cornerFamilyBottomLeft">cut</item>
-        <item name="cornerFamilyBottomRight">cut</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/playlist_grid_cover_corner_radius</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.PlaylistPickerCover" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/corner_radius_8</item>
+    </style>
+
+    <style name="Widget.PlaylistMaker.LibraryNewPlaylistButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:minHeight">@dimen/library_new_playlist_button_min_height</item>
+        <item name="android:paddingLeft">@dimen/padding_20</item>
+        <item name="android:paddingRight">@dimen/padding_20</item>
+        <item name="android:paddingTop">@dimen/padding_12</item>
+        <item name="android:paddingBottom">@dimen/padding_12</item>
+        <item name="backgroundTint">@color/button_background_color</item>
+        <item name="cornerRadius">54dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
 
 </resources>

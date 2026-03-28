@@ -43,8 +43,14 @@
     <color name="player_playlists_overlay_scrim">#99000000</color>
 
     <color name="bottom_nav_bar_background">#FFFFFF</color>
+    <!-- Как colorOnSecondary в светлой теме: тёмный текст неактивных пунктов, не серый #AEAFB4 -->
+    <color name="bottom_nav_item_inactive">@color/black</color>
 
     <color name="bottom_sheet_handle_color">#E6E8EB</color>
+
+    <!-- Сетка плейлистов: заголовок тёмно-серый, подпись — средний серый (макет) -->
+    <color name="playlist_grid_title_text">#1A1B22</color>
+    <color name="playlist_grid_secondary_text">#9AACB8</color>
 
 </resources>
 

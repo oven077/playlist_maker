@@ -35,7 +35,12 @@
     <color name="new_playlist_create_bg_enabled">@color/blue</color>
     <color name="new_playlist_create_text_enabled">#FFFFFF</color>
 
-    <color name="bottom_nav_bar_background">#000000</color>
+    <color name="bottom_nav_bar_background">#1A1B22</color>
+    <color name="bottom_nav_item_inactive">#FFFFFF</color>
 
     <color name="bottom_sheet_handle_color">#AEAFB4</color>
+
+    <color name="playlist_grid_secondary_text">#AEAFB4</color>
+
+    <color name="playlist_grid_title_text">#FFFFFF</color>
 </resources>
