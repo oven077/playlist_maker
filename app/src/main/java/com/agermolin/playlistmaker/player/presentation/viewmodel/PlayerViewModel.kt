@@ -4,10 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.core.entity.Track
+import com.agermolin.playlistmaker.core.presentation.Event
+import com.agermolin.playlistmaker.library.domain.interactor.IAddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IGetPlaylistsInteractor
+import com.agermolin.playlistmaker.library.domain.model.Playlist
 import com.agermolin.playlistmaker.player.domain.interactor.IGetCurrentPositionInteractor
 import com.agermolin.playlistmaker.player.domain.interactor.IGetPlayerStateInteractor
 import com.agermolin.playlistmaker.player.domain.interactor.IPauseTrackInteractor
@@ -24,17 +29,25 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     application: Application,
     private val favoritesInteractor: IFavoritesInteractor,
+    private val getPlaylistsInteractor: IGetPlaylistsInteractor,
+    private val addTrackToPlaylistInteractor: IAddTrackToPlaylistInteractor,
     private val preparePlayerInteractor: IPreparePlayerInteractor,
     private val playTrackInteractor: IPlayTrackInteractor,
     private val pauseTrackInteractor: IPauseTrackInteractor,
     private val getPlayerStateInteractor: IGetPlayerStateInteractor,
     private val getCurrentPositionInteractor: IGetCurrentPositionInteractor,
     private val setOnCompletionListenerInteractor: ISetOnCompletionListenerInteractor,
-    private val releasePlayerInteractor: IReleasePlayerInteractor
+    private val releasePlayerInteractor: IReleasePlayerInteractor,
 ) : AndroidViewModel(application) {
 
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState
+
+    val playlists: LiveData<List<Playlist>> =
+        getPlaylistsInteractor.observePlaylists().asLiveData()
+
+    private val _addTrackToPlaylistEvent = MutableLiveData<Event<AddTrackToPlaylistUiEvent>>()
+    val addTrackToPlaylistEvent: LiveData<Event<AddTrackToPlaylistUiEvent>> = _addTrackToPlaylistEvent
 
     private var progressJob: Job? = null
 
@@ -48,7 +61,7 @@ class PlayerViewModel(
                 isPlaying = false,
                 currentPosition = 0,
                 wasPrepared = false,
-                error = null
+                error = null,
             )
 
             if (trackWithFavorite.previewUrl.isNotEmpty()) {
@@ -69,7 +82,7 @@ class PlayerViewModel(
                     isPrepared = true,
                     isPlaying = false,
                     currentPosition = 0,
-                    wasPrepared = true
+                    wasPrepared = true,
                 )
             }
         }
@@ -81,13 +94,13 @@ class PlayerViewModel(
                 _screenState.value = st.copy(
                     isPrepared = true,
                     wasPrepared = true,
-                    error = null
+                    error = null,
                 )
             },
             onError = {
                 val st = _screenState.value ?: return@execute
                 _screenState.value = st.copy(isPrepared = false, error = "Failed to prepare player")
-            }
+            },
         )
     }
 
@@ -150,6 +163,20 @@ class PlayerViewModel(
         }
     }
 
+    fun onPlaylistPicked(playlist: Playlist) {
+        val track = _screenState.value?.track ?: return
+        if (track.trackId in playlist.trackIds) {
+            _addTrackToPlaylistEvent.value = Event(AddTrackToPlaylistUiEvent.AlreadyInPlaylist(playlist.name))
+            return
+        }
+        viewModelScope.launch {
+            val ok = addTrackToPlaylistInteractor.addTrackToPlaylist(playlist.id, track)
+            if (ok) {
+                _addTrackToPlaylistEvent.postValue(Event(AddTrackToPlaylistUiEvent.Added(playlist.name)))
+            }
+        }
+    }
+
     fun onPause() {
         if (getPlayerStateInteractor.execute() == PlayerState.PLAYING) pause()
     }
@@ -161,3 +188,7 @@ class PlayerViewModel(
     }
 }
 
+sealed interface AddTrackToPlaylistUiEvent {
+    data class Added(val playlistName: String) : AddTrackToPlaylistUiEvent
+    data class AlreadyInPlaylist(val playlistName: String) : AddTrackToPlaylistUiEvent
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="@dimen/playlist_picker_row_min_height"
+    android:paddingHorizontal="@dimen/padding_16"
+    android:paddingVertical="@dimen/margin_12">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/playlist_picker_cover"
+        android:layout_width="@dimen/playlist_picker_row_cover_size"
+        android:layout_height="@dimen/playlist_picker_row_cover_size"
+        android:contentDescription="@string/playlist_cover_preview_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.PlaylistPickerCover"
+        tools:src="@drawable/playlist_grid_cover_placeholder" />
+
+    <TextView
+        android:id="@+id/playlist_picker_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:ellipsize="end"
+        android:fontFamily="@font/ys_display_medium"
+        android:maxLines="2"
+        android:textColor="@color/text_color_primary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintBottom_toTopOf="@id/playlist_picker_track_count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playlist_picker_cover"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Плейлист" />
+
+    <TextView
+        android:id="@+id/playlist_picker_track_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_4"
+        android:fontFamily="@font/ys_text_regular"
+        android:textColor="@color/search_result_artist_text_color"
+        android:textSize="@dimen/text_size_11"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playlist_picker_cover"
+        app:layout_constraintTop_toBottomOf="@id/playlist_picker_title"
+        tools:text="0 треков" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

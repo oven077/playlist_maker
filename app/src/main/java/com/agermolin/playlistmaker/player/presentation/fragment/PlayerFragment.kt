@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.core.content.ContextCompat
@@ -14,7 +17,10 @@ import com.agermolin.playlistmaker.R
 import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.core.entity.Track
 import com.agermolin.playlistmaker.databinding.FragmentPlayerBinding
+import com.agermolin.playlistmaker.player.presentation.adapter.PlayerPlaylistPickerAdapter
+import com.agermolin.playlistmaker.player.presentation.viewmodel.AddTrackToPlaylistUiEvent
 import com.agermolin.playlistmaker.player.presentation.viewmodel.PlayerViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -27,6 +33,12 @@ class PlayerFragment : Fragment() {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding: FragmentPlayerBinding get() = requireNotNull(_binding)
+
+    private lateinit var playlistsBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private val playlistPickerAdapter = PlayerPlaylistPickerAdapter { playlist ->
+        viewModel.onPlaylistPicked(playlist)
+    }
 
     private val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("UTC")
@@ -44,6 +56,8 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupPlaylistBottomSheet()
+
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -57,6 +71,44 @@ class PlayerFragment : Fragment() {
             viewModel.onFavoriteClicked()
         }
 
+        binding.buttonAddToPlaylist.setOnClickListener {
+            playlistsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        binding.buttonBottomSheetNewPlaylist.setOnClickListener {
+            playlistsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+        }
+
+        binding.playerPlaylistsRecycler.adapter = playlistPickerAdapter
+        binding.playerPlaylistsRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.playlists.observe(viewLifecycleOwner) { list ->
+            playlistPickerAdapter.submitList(list)
+        }
+
+        viewModel.addTrackToPlaylistEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { uiEvent ->
+                when (uiEvent) {
+                    is AddTrackToPlaylistUiEvent.Added -> {
+                        playlistsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.track_added_to_playlist, uiEvent.playlistName),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                    is AddTrackToPlaylistUiEvent.AlreadyInPlaylist -> {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.track_already_in_playlist, uiEvent.playlistName),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            }
+        }
+
         val trackJson = requireArguments().getString(Constants.TRACK)
         if (trackJson.isNullOrBlank()) {
             findNavController().popBackStack()
@@ -68,6 +120,34 @@ class PlayerFragment : Fragment() {
         observeViewModel()
     }
 
+    private fun setupPlaylistBottomSheet() {
+        playlistsBottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+            isHideable = true
+        }
+
+        playlistsBottomSheetBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.playerPlaylistsOverlay.visibility = View.GONE
+                        }
+                        else -> {
+                            binding.playerPlaylistsOverlay.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+            },
+        )
+
+        binding.playerPlaylistsOverlay.setOnClickListener {
+            playlistsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+    }
+
     private fun initTrackInfo(track: Track) {
         viewModel.initTrack(track)
 
@@ -77,7 +157,7 @@ class PlayerFragment : Fragment() {
             .placeholder(R.drawable.placeholder_512)
             .centerCrop()
             .transform(
-                RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8))
+                RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)),
             )
             .into(binding.trackIcon)
 
@@ -140,4 +220,3 @@ class PlayerFragment : Fragment() {
         _binding = null
     }
 }
-

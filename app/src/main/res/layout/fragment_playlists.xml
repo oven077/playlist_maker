@@ -8,7 +8,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_new_playlist"
-        style="@style/ErrorButtonPlaceholder"
+        style="@style/Widget.PlaylistMaker.LibraryNewPlaylistButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
@@ -17,16 +17,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_16"
+        android:background="@color/screen_background"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_new_playlist" />
+
     <LinearLayout
         android:id="@+id/playlists_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="@dimen/margin_24"
         android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/placeholder_icon_margin_top_in_fragment">
+        app:layout_constraintTop_toBottomOf="@id/button_new_playlist"
+        app:layout_constraintVertical_bias="0.12">
 
         <ImageView
             android:layout_width="@dimen/placeholder_icon_size"
@@ -38,13 +53,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/ys_display_medium"
             android:text="@string/no_playlists"
             android:textAlignment="center"
             android:textColor="@color/text_color_primary"
-            android:textSize="@dimen/text_size_19"
-            android:fontFamily="@font/ys_display_medium"
-            android:textFontWeight="500" />
+            android:textFontWeight="500"
+            android:textSize="@dimen/text_size_19" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

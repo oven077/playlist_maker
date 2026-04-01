@@ -4,9 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
@@ -61,6 +62,16 @@ class SearchFragment : Fragment() {
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             render(state)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
+
+    override fun onPause() {
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        super.onPause()
     }
 
     private fun initSearch() {

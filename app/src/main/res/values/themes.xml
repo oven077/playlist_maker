@@ -17,6 +17,7 @@
         <!-- Surface colors for lists/screens -->
         <item name="colorSurface">@color/screen_background</item>
         <item name="colorOnSurface">@color/text_color_primary</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
 
