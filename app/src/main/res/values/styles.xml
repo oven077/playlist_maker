@@ -125,6 +125,26 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
+    <style name="PlaylistName">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="PlaylistDescription">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="ThemeOverlay.PlaylistMaker.LightAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black_blue</item>

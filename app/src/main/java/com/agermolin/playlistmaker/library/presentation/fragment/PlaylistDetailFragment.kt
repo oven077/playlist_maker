@@ -50,12 +50,15 @@ class PlaylistDetailFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        adapter = SearchRecyclerAdapter(tracks) { track ->
-            findNavController().navigate(
-                R.id.action_playlistDetailFragment_to_playerFragment,
-                bundleOf(Constants.TRACK to Gson().toJson(track)),
-            )
-        }
+        adapter = SearchRecyclerAdapter(
+            items = tracks,
+            onTrackClick = { track ->
+                findNavController().navigate(
+                    R.id.action_playlistDetailFragment_to_playerFragment,
+                    bundleOf(Constants.TRACK to Gson().toJson(track)),
+                )
+            },
+        )
         binding.playlistDetailTracks.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistDetailTracks.adapter = adapter
 
@@ -112,7 +115,7 @@ class PlaylistDetailFragment : Fragment() {
                 .into(binding.playlistDetailCover)
         } else {
             Glide.with(binding.playlistDetailCover).clear(binding.playlistDetailCover)
-            binding.playlistDetailCover.setImageResource(R.drawable.playlist_grid_cover_placeholder)
+            binding.playlistDetailCover.setImageResource(R.drawable.placeholder_512)
         }
     }
 

@@ -61,6 +61,7 @@
     <dimen name="playlists_bottom_sheet_padding_top">8dp</dimen>
     <dimen name="playlist_picker_row_cover_size">48dp</dimen>
     <dimen name="playlist_picker_row_min_height">72dp</dimen>
+    <dimen name="playlist_detail_sheet_height">112dp</dimen>
 
     <dimen name="playlist_detail_cover_height">200dp</dimen>
 

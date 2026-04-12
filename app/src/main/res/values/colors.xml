@@ -47,6 +47,7 @@
     <color name="bottom_nav_item_inactive">@color/black</color>
 
     <color name="bottom_sheet_handle_color">#E6E8EB</color>
+    <color name="pale_grey">#E6E8EB</color>
 
     <!-- Сетка плейлистов: заголовок тёмно-серый, подпись — средний серый (макет) -->
     <color name="playlist_grid_title_text">#1A1B22</color>
