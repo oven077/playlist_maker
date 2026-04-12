@@ -16,5 +16,16 @@ interface PlaylistRepository {
 
     suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Boolean
 
+    suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Long)
+
+    suspend fun deletePlaylist(playlistId: Long)
+
+    suspend fun updatePlaylistInfo(
+        playlistId: Long,
+        name: String,
+        description: String,
+        coverUri: Uri?,
+    )
+
     fun observePlaylistDetail(playlistId: Long): Flow<PlaylistDetailResult>
 }

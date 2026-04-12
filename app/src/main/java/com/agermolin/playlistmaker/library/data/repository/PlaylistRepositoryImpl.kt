@@ -72,6 +72,54 @@ class PlaylistRepositoryImpl(
             }
         }
 
+    override suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Long) =
+        withContext(Dispatchers.IO) {
+            database.withTransaction {
+                val entity = playlistDao.getById(playlistId) ?: return@withTransaction
+                val ids = parseTrackIds(entity.trackIdsJson)
+                if (trackId !in ids) return@withTransaction
+
+                val updatedIds = ids.filterNot { it == trackId }
+                val updated = entity.copy(
+                    trackIdsJson = gson.toJson(updatedIds),
+                    trackCount = updatedIds.size,
+                )
+                playlistDao.update(updated)
+
+                cleanupTrackIfUnused(trackId)
+            }
+        }
+
+    override suspend fun deletePlaylist(playlistId: Long) =
+        withContext(Dispatchers.IO) {
+            database.withTransaction {
+                val entity = playlistDao.getById(playlistId) ?: return@withTransaction
+                val removedTrackIds = parseTrackIds(entity.trackIdsJson).distinct()
+                playlistDao.deleteById(playlistId)
+                removedTrackIds.forEach { trackId ->
+                    cleanupTrackIfUnused(trackId)
+                }
+            }
+        }
+
+    override suspend fun updatePlaylistInfo(
+        playlistId: Long,
+        name: String,
+        description: String,
+        coverUri: Uri?,
+    ) = withContext(Dispatchers.IO) {
+        database.withTransaction {
+            val entity = playlistDao.getById(playlistId) ?: return@withTransaction
+            val newCoverPath = coverUri?.let { copyCoverToAppStorage(it) } ?: entity.coverImagePath
+            val updated = entity.copy(
+                name = name,
+                description = description,
+                coverImagePath = newCoverPath,
+            )
+            playlistDao.update(updated)
+        }
+    }
+
     override fun observePlaylistDetail(playlistId: Long): Flow<PlaylistDetailResult> =
         playlistDao.observeAll().mapLatest { entities ->
             val entity = entities.find { it.id == playlistId }
@@ -97,6 +145,15 @@ class PlaylistRepositoryImpl(
             gson.fromJson<List<Long>>(json, type) ?: emptyList()
         } catch (_: Exception) {
             emptyList()
+        }
+    }
+
+    private suspend fun cleanupTrackIfUnused(trackId: Long) {
+        val stillUsed = playlistDao.getAll().any { playlist ->
+            parseTrackIds(playlist.trackIdsJson).contains(trackId)
+        }
+        if (!stillUsed) {
+            playlistTrackDao.deleteById(trackId)
         }
     }
 
