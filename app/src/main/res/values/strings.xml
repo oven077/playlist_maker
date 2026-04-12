@@ -69,9 +69,11 @@
     <string name="playlist_menu_edit">Редактировать информацию</string>
     <string name="playlist_menu_delete">Удалить плейлист</string>
     <string name="delete_playlist_title">Удалить плейлист</string>
-    <string name="delete_playlist_message">Хотите удалить плейлист?</string>
+    <string name="delete_playlist_message">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="dialog_no_short">Нет</string>
     <string name="dialog_yes_short">Да</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_delete">Удалить</string>
     <string name="edit_playlist_screen_title">Редактировать</string>
     <string name="save_playlist">Сохранить</string>
 

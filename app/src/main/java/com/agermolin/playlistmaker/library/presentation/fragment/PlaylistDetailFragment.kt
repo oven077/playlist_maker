@@ -213,8 +213,8 @@ class PlaylistDetailFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_PlaylistMaker_LightAlertDialog)
             .setTitle(R.string.delete_playlist_title)
             .setMessage(R.string.delete_playlist_message)
-            .setNegativeButton(R.string.dialog_no_short, null)
-            .setPositiveButton(R.string.dialog_yes_short) { _, _ ->
+            .setNegativeButton(R.string.dialog_cancel, null)
+            .setPositiveButton(R.string.dialog_delete) { _, _ ->
                 viewModel.deleteCurrentPlaylist()
             }
             .show()
@@ -242,7 +242,7 @@ class PlaylistDetailFragment : Fragment() {
         val totalSeconds = trackTimeMillis / 1000
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
-        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds)
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
     }
 
     private fun bindMenuCover(imageView: ImageView, path: String?) {

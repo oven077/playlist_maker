@@ -61,7 +61,7 @@ class PlaylistRepositoryImpl(
                 val entity = playlistDao.getById(playlistId) ?: return@withTransaction false
                 val ids = parseTrackIds(entity.trackIdsJson)
                 if (track.trackId in ids) return@withTransaction false
-                val newIds = ids + track.trackId
+                val newIds = listOf(track.trackId) + ids
                 val updated = entity.copy(
                     trackIdsJson = gson.toJson(newIds),
                     trackCount = newIds.size,
