@@ -20,6 +20,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.agermolin.playlistmaker.R
+import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.agermolin.playlistmaker.library.presentation.viewmodel.NewPlaylistViewModel
 import com.bumptech.glide.Glide
@@ -28,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 class NewPlaylistFragment : Fragment() {
 
@@ -35,6 +37,7 @@ class NewPlaylistFragment : Fragment() {
 
     private var _binding: FragmentNewPlaylistBinding? = null
     private val binding: FragmentNewPlaylistBinding get() = requireNotNull(_binding)
+    private var isEditMode = false
 
     private val pickVisualMedia = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia(),
@@ -81,6 +84,14 @@ class NewPlaylistFragment : Fragment() {
             tryNavigateBack()
         }
 
+        val editPlaylistId = arguments?.getLong(Constants.EDIT_PLAYLIST_ID, -1L) ?: -1L
+        if (editPlaylistId != -1L) {
+            isEditMode = true
+            binding.newPlaylistToolbar.title = getString(R.string.edit_playlist_screen_title)
+            binding.buttonCreatePlaylist.text = getString(R.string.save_playlist)
+            viewModel.initEditMode(editPlaylistId)
+        }
+
         binding.playlistCoverPlaceholder.setOnClickListener {
             pickVisualMedia.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
@@ -103,18 +114,30 @@ class NewPlaylistFragment : Fragment() {
             bindCoverImage(uri)
         }
 
+        viewModel.editData.observe(viewLifecycleOwner) { data ->
+            if (data == null) return@observe
+            binding.inputPlaylistName.setText(data.name)
+            binding.inputPlaylistDescription.setText(data.description)
+            bindCoverImageFromPath(data.coverPath)
+        }
+
+        viewModel.saveCompleted.observe(viewLifecycleOwner) {
+            findNavController().navigateUp()
+        }
+
         viewModel.saveSuccess.observe(viewLifecycleOwner) { name ->
             if (name == null) return@observe
-            val message = getString(R.string.playlist_created_toast, name)
-            val content = requireActivity().findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(content, message, Snackbar.LENGTH_SHORT)
-            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
-            if (bottomNav.isVisible) {
-                snackbar.setAnchorView(bottomNav)
+            if (!isEditMode) {
+                val message = getString(R.string.playlist_created_toast, name)
+                val content = requireActivity().findViewById<View>(android.R.id.content)
+                val snackbar = Snackbar.make(content, message, Snackbar.LENGTH_SHORT)
+                val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+                if (bottomNav.isVisible) {
+                    snackbar.setAnchorView(bottomNav)
+                }
+                snackbar.show()
             }
-            snackbar.show()
             viewModel.consumeSaveSuccess()
-            findNavController().navigateUp()
         }
 
         viewModel.saveError.observe(viewLifecycleOwner) {
@@ -146,6 +169,10 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun tryNavigateBack() {
+        if (isEditMode) {
+            findNavController().navigateUp()
+            return
+        }
         if (!viewModel.hasUnsavedChanges()) {
             findNavController().navigateUp()
             return
@@ -182,6 +209,24 @@ class NewPlaylistFragment : Fragment() {
             .apply(RequestOptions.bitmapTransform(RoundedCorners(radiusPx)))
             .into(binding.playlistCoverPreview)
 
+        binding.playlistCoverPlaceholder.post { applyPlaylistCoverOutline() }
+    }
+
+    private fun bindCoverImageFromPath(path: String?) {
+        val file = path?.let { File(it) }
+        if (file == null || !file.exists() || file.length() == 0L) {
+            bindCoverImage(null)
+            return
+        }
+        val radiusPx = resources.getDimensionPixelSize(R.dimen.new_playlist_cover_corner_radius)
+        binding.playlistCoverPreview.isVisible = true
+        binding.playlistCoverPlaceholderIcon.isVisible = false
+        binding.playlistCoverPlaceholder.setBackgroundResource(android.R.color.transparent)
+        Glide.with(this)
+            .load(file)
+            .centerCrop()
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(radiusPx)))
+            .into(binding.playlistCoverPreview)
         binding.playlistCoverPlaceholder.post { applyPlaylistCoverOutline() }
     }
 

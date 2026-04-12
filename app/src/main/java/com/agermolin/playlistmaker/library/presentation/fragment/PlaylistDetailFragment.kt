@@ -196,6 +196,10 @@ class PlaylistDetailFragment : Fragment() {
         }
         sheetView.findViewById<View>(R.id.menu_action_edit).setOnClickListener {
             sheetDialog.dismiss()
+            findNavController().navigate(
+                R.id.action_playlistDetailFragment_to_newPlaylistFragment,
+                bundleOf(Constants.EDIT_PLAYLIST_ID to content.playlist.id),
+            )
         }
         sheetView.findViewById<View>(R.id.menu_action_delete).setOnClickListener {
             sheetDialog.dismiss()

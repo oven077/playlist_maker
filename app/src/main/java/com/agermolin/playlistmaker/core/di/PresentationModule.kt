@@ -42,7 +42,7 @@ val presentationModule = module {
     viewModel { LibraryViewModel() }
     viewModel { FavoritesTracksViewModel(get()) }
     viewModel { PlaylistsViewModel(get()) }
-    viewModel { NewPlaylistViewModel(get()) }
+    viewModel { NewPlaylistViewModel(get(), get(), get()) }
 
     viewModel { (playlistId: Long) ->
         PlaylistDetailViewModel(playlistId, get(), get(), get())
