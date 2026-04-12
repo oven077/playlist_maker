@@ -64,9 +64,14 @@
     <string name="delete_track_from_playlist_title">Хотите удалить трек?</string>
     <string name="dialog_no">НЕТ</string>
     <string name="dialog_yes">ДА</string>
+    <string name="playlist_share_empty_error">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="playlist_menu_share">Поделиться</string>
     <string name="playlist_menu_edit">Редактировать информацию</string>
     <string name="playlist_menu_delete">Удалить плейлист</string>
+    <string name="delete_playlist_title">Удалить плейлист</string>
+    <string name="delete_playlist_message">Хотите удалить плейлист?</string>
+    <string name="dialog_no_short">Нет</string>
+    <string name="dialog_yes_short">Да</string>
 
     <plurals name="playlist_track_count">
         <item quantity="zero">%d треков</item>

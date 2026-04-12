@@ -45,7 +45,7 @@ val presentationModule = module {
     viewModel { NewPlaylistViewModel(get()) }
 
     viewModel { (playlistId: Long) ->
-        PlaylistDetailViewModel(playlistId, get(), get())
+        PlaylistDetailViewModel(playlistId, get(), get(), get())
     }
 }
 
