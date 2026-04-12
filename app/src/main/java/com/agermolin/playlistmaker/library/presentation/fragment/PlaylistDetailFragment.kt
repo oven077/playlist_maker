@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,6 +18,8 @@ import com.agermolin.playlistmaker.library.domain.model.PlaylistDetailResult
 import com.agermolin.playlistmaker.library.presentation.viewmodel.PlaylistDetailViewModel
 import com.agermolin.playlistmaker.search.presentation.adapter.SearchRecyclerAdapter
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -33,6 +36,7 @@ class PlaylistDetailFragment : Fragment() {
 
     private val tracks = ArrayList<Track>()
     private lateinit var adapter: SearchRecyclerAdapter
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,9 +62,13 @@ class PlaylistDetailFragment : Fragment() {
                     bundleOf(Constants.TRACK to Gson().toJson(track)),
                 )
             },
+            onTrackLongClick = { track ->
+                showRemoveTrackDialog(track)
+            },
         )
         binding.playlistDetailTracks.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistDetailTracks.adapter = adapter
+        setupBottomSheet()
 
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -99,11 +107,34 @@ class PlaylistDetailFragment : Fragment() {
         val hasTracks = content.tracks.isNotEmpty()
         binding.playlistDetailPlaceholder.isVisible = !hasTracks
         binding.playlistDetailTracks.isVisible = hasTracks
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         if (hasTracks) {
             tracks.clear()
             tracks.addAll(content.tracks)
             adapter.notifyDataSetChanged()
+        } else {
+            tracks.clear()
+            adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun setupBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistDetailBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_COLLAPSED
+            isHideable = false
+            skipCollapsed = false
+            peekHeight = resources.getDimensionPixelSize(R.dimen.playlist_detail_sheet_height)
+        }
+    }
+
+    private fun showRemoveTrackDialog(track: Track) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_PlaylistMaker_LightAlertDialog)
+            .setTitle(R.string.delete_track_from_playlist_title)
+            .setNegativeButton(R.string.dialog_no, null)
+            .setPositiveButton(R.string.dialog_yes) { _, _ ->
+                viewModel.removeTrack(track.trackId)
+            }
+            .show()
     }
 
     private fun bindCover(path: String?) {

@@ -9,7 +9,8 @@ import com.agermolin.playlistmaker.search.presentation.viewholder.SearchViewHold
 
 class SearchRecyclerAdapter(
     private val items: ArrayList<Track>,
-    private val onTrackClick: (Track) -> Unit
+    private val onTrackClick: (Track) -> Unit,
+    private val onTrackLongClick: ((Track) -> Unit)? = null,
 ) : RecyclerView.Adapter<SearchViewHolder>() {
 
     var tracks: ArrayList<Track>
@@ -34,6 +35,11 @@ class SearchRecyclerAdapter(
 
         holder.itemView.setOnClickListener {
             onTrackClick(track)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onTrackLongClick?.invoke(track)
+            onTrackLongClick != null
         }
     }
 }

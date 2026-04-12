@@ -29,7 +29,9 @@ import com.agermolin.playlistmaker.library.domain.interactor.ICreatePlaylistInte
 import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IObservePlaylistDetailInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IGetPlaylistsInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IRemoveTrackFromPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.ObservePlaylistDetailInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.RemoveTrackFromPlaylistInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.SearchTracksInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 import com.agermolin.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
@@ -59,6 +61,10 @@ val domainModule = module {
 
     factory<IObservePlaylistDetailInteractor> {
         ObservePlaylistDetailInteractor(get())
+    }
+
+    factory<IRemoveTrackFromPlaylistInteractor> {
+        RemoveTrackFromPlaylistInteractor(get())
     }
 
     // Search Interactors
