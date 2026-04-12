@@ -70,7 +70,19 @@ class PlaylistDetailFragment : Fragment() {
 
     private fun renderContent(content: PlaylistDetailResult.Content) {
         val playlist = content.playlist
-        binding.playlistDetailToolbar.title = playlist.name
+        binding.playlistDetailToolbar.title = ""
+        binding.playlistDetailName.text = playlist.name
+        binding.playlistDetailMetaTrackCount.text = resources.getQuantityString(
+            R.plurals.playlist_track_count,
+            playlist.trackCount,
+            playlist.trackCount,
+        )
+        val totalMinutes = (content.tracks.sumOf { it.trackTimeMillis.toLong() } / 60_000L).toInt()
+        binding.playlistDetailMetaDuration.text = resources.getQuantityString(
+            R.plurals.playlist_duration_minutes,
+            totalMinutes,
+            totalMinutes,
+        )
 
         if (playlist.description.isNotBlank()) {
             binding.playlistDetailDescription.text = playlist.description

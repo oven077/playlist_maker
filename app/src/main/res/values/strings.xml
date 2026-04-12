@@ -59,6 +59,8 @@
     <string name="track_added_to_playlist">Добавлено в плейлист %1$s</string>
     <string name="track_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
     <string name="playlist_empty_tracks">В этом плейлисте нет треков</string>
+    <string name="playlist_detail_share">Поделиться плейлистом</string>
+    <string name="playlist_detail_more">Меню плейлиста</string>
 
     <plurals name="playlist_track_count">
         <item quantity="zero">%d треков</item>
@@ -66,6 +68,14 @@
         <item quantity="few">%d трека</item>
         <item quantity="many">%d треков</item>
         <item quantity="other">%d треков</item>
+    </plurals>
+
+    <plurals name="playlist_duration_minutes">
+        <item quantity="zero">%d минут</item>
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
     </plurals>
 
 </resources>
