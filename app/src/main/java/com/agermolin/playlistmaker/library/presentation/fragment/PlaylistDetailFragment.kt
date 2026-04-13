@@ -9,7 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -139,6 +141,19 @@ class PlaylistDetailFragment : Fragment() {
             skipCollapsed = false
             peekHeight = resources.getDimensionPixelSize(R.dimen.playlist_detail_sheet_height)
         }
+        binding.root.doOnLayout {
+            updateBottomSheetPeekHeight()
+        }
+    }
+
+    private fun updateBottomSheetPeekHeight() {
+        val controlsBottom = maxOf(binding.playlistDetailShare.bottom, binding.playlistDetailMore.bottom)
+        val controlsToSheetGap = resources.getDimensionPixelSize(R.dimen.margin_24) +
+            resources.getDimensionPixelSize(R.dimen.margin_8)
+        val topOffset = controlsBottom + controlsToSheetGap
+        val availableHeight = binding.root.height - topOffset
+        val minPeek = resources.getDimensionPixelSize(R.dimen.playlist_detail_sheet_height)
+        bottomSheetBehavior.peekHeight = maxOf(minPeek, availableHeight)
     }
 
     private fun showRemoveTrackDialog(track: Track) {
@@ -260,7 +275,14 @@ class PlaylistDetailFragment : Fragment() {
 
     private fun bindCover(path: String?) {
         val file = path?.let { File(it) }
-        if (file != null && file.exists() && file.length() > 0L) {
+        val hasCover = file != null && file.exists() && file.length() > 0L
+        binding.playlistDetailCoverCard.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                if (hasCover) R.color.white else R.color.pale_grey,
+            ),
+        )
+        if (hasCover) {
             Glide.with(this)
                 .load(file)
                 .centerCrop()
