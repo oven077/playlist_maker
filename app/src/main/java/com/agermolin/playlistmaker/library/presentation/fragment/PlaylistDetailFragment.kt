@@ -47,6 +47,7 @@ class PlaylistDetailFragment : Fragment() {
     private lateinit var adapter: SearchRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private var currentContent: PlaylistDetailResult.Content? = null
+    private var poppedForNotFound = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,13 +84,22 @@ class PlaylistDetailFragment : Fragment() {
 
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is PlaylistDetailResult.NotFound -> findNavController().popBackStack()
+                is PlaylistDetailResult.NotFound -> popDetailOnce()
                 is PlaylistDetailResult.Content -> renderContent(state)
                 null -> Unit
             }
         }
+    }
 
-        viewModel.playlistDeleted.observe(viewLifecycleOwner) {
+    /**
+     * Один pop: после удаления плейлиста Room даёт [PlaylistDetailResult.NotFound].
+     * Раньше второй pop шёл из playlistDeleted — двойной pop ломал стек и мог крешить при следующем открытии.
+     */
+    private fun popDetailOnce() {
+        if (poppedForNotFound) return
+        poppedForNotFound = true
+        view?.post {
+            if (!isAdded) return@post
             findNavController().popBackStack()
         }
     }

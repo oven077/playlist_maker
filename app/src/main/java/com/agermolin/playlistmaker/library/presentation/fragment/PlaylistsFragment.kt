@@ -25,8 +25,9 @@ class PlaylistsFragment : Fragment() {
     private val binding: FragmentPlaylistsBinding get() = requireNotNull(_binding)
 
     private val adapter = PlaylistsAdapter { playlist ->
+        // Destination id, не action из libraryFragment — иначе при currentDestination != libraryFragment будет crash
         findNavController().navigate(
-            R.id.action_libraryFragment_to_playlistDetailFragment,
+            R.id.playlistDetailFragment,
             bundleOf(Constants.PLAYLIST_ID to playlist.id),
         )
     }
@@ -54,7 +55,7 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.buttonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+            findNavController().navigate(R.id.newPlaylistFragment)
         }
 
         viewModel.playlists.observe(viewLifecycleOwner) { list ->

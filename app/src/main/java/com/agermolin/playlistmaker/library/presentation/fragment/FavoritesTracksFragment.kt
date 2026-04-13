@@ -52,8 +52,8 @@ class FavoritesTracksFragment : Fragment() {
             items = tracks,
             onTrackClick = { track ->
                 findNavController().navigate(
-                    R.id.action_libraryFragment_to_playerFragment,
-                    bundleOf(Constants.TRACK to Gson().toJson(track))
+                    R.id.playerFragment,
+                    bundleOf(Constants.TRACK to Gson().toJson(track)),
                 )
             },
         )
