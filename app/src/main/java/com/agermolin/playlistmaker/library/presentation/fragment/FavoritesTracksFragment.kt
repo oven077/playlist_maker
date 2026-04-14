@@ -48,12 +48,15 @@ class FavoritesTracksFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        adapter = SearchRecyclerAdapter(tracks) { track ->
-            findNavController().navigate(
-                R.id.action_libraryFragment_to_playerFragment,
-                bundleOf(Constants.TRACK to Gson().toJson(track))
-            )
-        }
+        adapter = SearchRecyclerAdapter(
+            items = tracks,
+            onTrackClick = { track ->
+                findNavController().navigate(
+                    R.id.playerFragment,
+                    bundleOf(Constants.TRACK to Gson().toJson(track)),
+                )
+            },
+        )
         binding.favoritesRecyclerView.adapter = adapter
     }
 

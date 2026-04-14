@@ -18,7 +18,7 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val minutes = track.trackTimeMillis / 60000
         val seconds = (track.trackTimeMillis % 60000) / 1000
-        trackTime.text = String.format("%d:%02d", minutes, seconds)
+        trackTime.text = String.format("%02d:%02d", minutes, seconds)
 
         Glide.with(itemView)
             .load(track.artworkUrl100)

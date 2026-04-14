@@ -39,6 +39,7 @@
     <color name="bottom_nav_item_inactive">#FFFFFF</color>
 
     <color name="bottom_sheet_handle_color">#AEAFB4</color>
+    <color name="playlist_detail_bottom_sheet_background">#1A1B22</color>
 
     <color name="playlist_grid_secondary_text">#AEAFB4</color>
 

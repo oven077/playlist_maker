@@ -118,13 +118,16 @@ class SearchFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        searchAdapter = SearchRecyclerAdapter(tracks) { track ->
-            viewModel.onTrackClicked(track)
-            findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
-                bundleOf(Constants.TRACK to Gson().toJson(track))
-            )
-        }
+        searchAdapter = SearchRecyclerAdapter(
+            items = tracks,
+            onTrackClick = { track ->
+                viewModel.onTrackClicked(track)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    bundleOf(Constants.TRACK to Gson().toJson(track))
+                )
+            },
+        )
         binding.recyclerView.adapter = searchAdapter
     }
 
@@ -136,13 +139,16 @@ class SearchFragment : Fragment() {
     }
 
     private fun initSearchHistory() {
-        historyAdapter = SearchRecyclerAdapter(historyTracks) { track ->
-            viewModel.onTrackClicked(track)
-            findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
-                bundleOf(Constants.TRACK to Gson().toJson(track))
-            )
-        }
+        historyAdapter = SearchRecyclerAdapter(
+            items = historyTracks,
+            onTrackClick = { track ->
+                viewModel.onTrackClicked(track)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    bundleOf(Constants.TRACK to Gson().toJson(track))
+                )
+            },
+        )
         binding.recyclerViewHistory.adapter = historyAdapter
 
         binding.buttonClearHistory.setOnClickListener {

@@ -22,14 +22,20 @@ import com.agermolin.playlistmaker.search.domain.interactor.GetSearchHistoryInte
 import com.agermolin.playlistmaker.search.domain.interactor.IGetSearchHistoryInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.AddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.CreatePlaylistInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.DeletePlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.FavoritesInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.GetPlaylistsInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IAddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.ICreatePlaylistInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IDeletePlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IObservePlaylistDetailInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IGetPlaylistsInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IRemoveTrackFromPlaylistInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.IUpdatePlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.ObservePlaylistDetailInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.RemoveTrackFromPlaylistInteractor
+import com.agermolin.playlistmaker.library.domain.interactor.UpdatePlaylistInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.SearchTracksInteractor
 import com.agermolin.playlistmaker.search.domain.interactor.ISearchTracksInteractor
 import com.agermolin.playlistmaker.settings.domain.interactor.GetDarkThemeInteractor
@@ -59,6 +65,18 @@ val domainModule = module {
 
     factory<IObservePlaylistDetailInteractor> {
         ObservePlaylistDetailInteractor(get())
+    }
+
+    factory<IRemoveTrackFromPlaylistInteractor> {
+        RemoveTrackFromPlaylistInteractor(get())
+    }
+
+    factory<IDeletePlaylistInteractor> {
+        DeletePlaylistInteractor(get())
+    }
+
+    factory<IUpdatePlaylistInteractor> {
+        UpdatePlaylistInteractor(get())
     }
 
     // Search Interactors

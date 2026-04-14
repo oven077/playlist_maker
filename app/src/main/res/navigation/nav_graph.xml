@@ -31,7 +31,12 @@
     <fragment
         android:id="@+id/newPlaylistFragment"
         android:name="com.agermolin.playlistmaker.library.presentation.fragment.NewPlaylistFragment"
-        android:label="@string/new_playlist_screen_title" />
+        android:label="@string/new_playlist_screen_title">
+        <argument
+            android:name="EDIT_PLAYLIST_ID"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 
     <fragment
         android:id="@+id/playlistDetailFragment"
@@ -43,6 +48,9 @@
         <action
             android:id="@+id/action_playlistDetailFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
 
     <fragment
