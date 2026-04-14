@@ -9,8 +9,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -292,6 +292,8 @@ class PlaylistDetailFragment : Fragment() {
                 if (hasCover) R.color.white else R.color.pale_grey,
             ),
         )
+        binding.playlistDetailCover.scaleType =
+            if (hasCover) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
         if (hasCover) {
             Glide.with(this)
                 .load(file)

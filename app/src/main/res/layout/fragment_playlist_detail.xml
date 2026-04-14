@@ -25,15 +25,28 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/margin_24" />
 
-        <!-- Верхний блок на всю ширину; высота 360dp. Без обложки серый; с обложкой белый. -->
+        <!-- Макет: рамка 360dp по высоте на всю ширину; картинка ровно 312×312 по центру (визуально наезжает на стрелку) -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/playlist_detail_cover_card"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/playlist_detail_cover_frame_size"
             android:background="@color/pale_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/playlist_detail_cover"
+                android:layout_width="@dimen/playlist_detail_cover_image_size"
+                android:layout_height="@dimen/playlist_detail_cover_image_size"
+                android:contentDescription="@string/playlist_cover_preview_description"
+                android:foreground="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/placeholder_512" />
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/playlist_detail_toolbar"
@@ -45,24 +58,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/arrow_back"
                 app:navigationIconTint="@color/black" />
-
-            <!-- Квадрат по центру (макет ~360×360), не на всю ширину экрана -->
-            <ImageView
-                android:id="@+id/playlist_detail_cover"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:contentDescription="@string/playlist_cover_preview_description"
-                android:foreground="?attr/selectableItemBackground"
-                android:scaleType="centerCrop"
-                app:layout_constrainedHeight="true"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_max="@dimen/playlist_detail_cover_square"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playlist_detail_toolbar"
-                app:layout_constraintWidth_max="@dimen/playlist_detail_cover_square"
-                tools:src="@drawable/placeholder_512" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -101,6 +96,8 @@
                 android:id="@+id/playlist_detail_meta_duration"
                 style="@style/PlaylistDescription"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 tools:text="300 минут" />
 
             <ImageView
@@ -115,6 +112,8 @@
                 android:id="@+id/playlist_detail_meta_track_count"
                 style="@style/PlaylistDescription"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 tools:text="98 треков" />
         </LinearLayout>
 
@@ -140,7 +139,6 @@
             android:contentDescription="@string/playlist_detail_more"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="0dp"
-            android:rotation="90"
             android:src="@drawable/more"
             app:layout_constraintEnd_toEndOf="@id/playlist_detail_guideline_end"
             app:layout_constraintHorizontal_bias="0"

@@ -62,11 +62,8 @@
     <dimen name="playlist_picker_row_cover_size">48dp</dimen>
     <dimen name="playlist_picker_row_min_height">72dp</dimen>
     <dimen name="playlist_detail_sheet_height">112dp</dimen>
-
-    <!-- Макет: высота верхнего блока (обложка + тулбар); ширина — на весь экран -->
-    <dimen name="playlist_detail_cover_square">360dp</dimen>
-
-    <dimen name="playlist_detail_cover_height">200dp</dimen>
+    <dimen name="playlist_detail_cover_frame_size">360dp</dimen>
+    <dimen name="playlist_detail_cover_image_size">312dp</dimen>
 
     <dimen name="playlist_grid_cover_corner_radius">12dp</dimen>
     <dimen name="library_new_playlist_button_min_height">48dp</dimen>
