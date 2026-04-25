@@ -193,8 +193,7 @@ class PlayerFragment : Fragment() {
             state.track?.let {
                 binding.playTrack.isEnabled = state.isPrepared || state.wasPrepared
 
-                val iconRes = if (state.isPlaying) R.drawable.pause else R.drawable.play
-                binding.playTrack.setImageResource(iconRes)
+                binding.playTrack.setPlaying(state.isPlaying)
 
                 binding.progress.text = timeFormat.format(state.currentPosition.toLong())
 

@@ -107,22 +107,16 @@
         app:layout_constraintTop_toTopOf="@id/play_track"
         app:tint="@color/white" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.agermolin.playlistmaker.player.presentation.view.PlaybackButtonView
         android:id="@+id/play_track"
         android:layout_width="84dp"
         android:layout_height="84dp"
-        android:contentDescription="@string/play"
-        android:foregroundGravity="center"
-        android:src="@drawable/play"
-        app:backgroundTint="?attr/colorOnSecondary"
-        app:elevation="0dp"
-        app:fabCustomSize="84dp"
         app:layout_constraintBottom_toTopOf="@id/duration"
         app:layout_constraintEnd_toStartOf="@id/button_add_to_favorites"
         app:layout_constraintStart_toEndOf="@id/button_add_to_playlist"
         app:layout_constraintTop_toBottomOf="@id/artistName"
-        app:maxImageSize="64dp"
-        app:tint="?attr/colorSecondary" />
+        app:playbackPauseIcon="@drawable/pause"
+        app:playbackPlayIcon="@drawable/play" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_add_to_favorites"
