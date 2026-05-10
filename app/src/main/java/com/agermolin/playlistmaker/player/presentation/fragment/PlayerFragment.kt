@@ -1,15 +1,28 @@
 package com.agermolin.playlistmaker.player.presentation.fragment
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.ColorStateList
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.core.content.ContextCompat
@@ -20,6 +33,7 @@ import com.agermolin.playlistmaker.databinding.FragmentPlayerBinding
 import com.agermolin.playlistmaker.player.presentation.adapter.PlayerPlaylistPickerAdapter
 import com.agermolin.playlistmaker.player.presentation.viewmodel.AddTrackToPlaylistUiEvent
 import com.agermolin.playlistmaker.player.presentation.viewmodel.PlayerViewModel
+import com.agermolin.playlistmaker.player.service.PlayerService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,11 +44,45 @@ import java.util.TimeZone
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel()
+    private val gson = Gson()
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding: FragmentPlayerBinding get() = requireNotNull(_binding)
 
     private lateinit var playlistsBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private var playerServiceBound = false
+    private var trackJson: String? = null
+
+    private val activityLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onStart(owner: LifecycleOwner) {
+            viewModel.onUiStarted()
+        }
+
+        override fun onStop(owner: LifecycleOwner) {
+            viewModel.onUiStopped(canShowNotification())
+        }
+    }
+
+    private val requestNotificationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted ->
+        if (!isGranted) {
+            viewModel.onUiStarted()
+        }
+    }
+
+    private val playerServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as? PlayerService.PlayerBinder ?: return
+            viewModel.attachService(binder.getService())
+            playerServiceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            playerServiceBound = false
+            viewModel.detachService()
+        }
+    }
 
     private val playlistPickerAdapter = PlayerPlaylistPickerAdapter { playlist ->
         viewModel.onPlaylistPicked(playlist)
@@ -58,7 +106,26 @@ class PlayerFragment : Fragment() {
 
         setupPlaylistBottomSheet()
 
+        trackJson = requireArguments().getString(Constants.TRACK)
+        if (trackJson.isNullOrBlank()) {
+            findNavController().popBackStack()
+            return
+        }
+
+        val track = gson.fromJson(trackJson, Track::class.java)
+        bindPlayerService(trackJson!!)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.onScreenClosed()
+                    findNavController().popBackStack()
+                }
+            },
+        )
+
         binding.playerToolbar.setNavigationOnClickListener {
+            viewModel.onScreenClosed()
             findNavController().popBackStack()
         }
 
@@ -109,15 +176,10 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        val trackJson = requireArguments().getString(Constants.TRACK)
-        if (trackJson.isNullOrBlank()) {
-            findNavController().popBackStack()
-            return
-        }
-
-        val track = Gson().fromJson(trackJson, Track::class.java)
         initTrackInfo(track)
         observeViewModel()
+        requireActivity().lifecycle.addObserver(activityLifecycleObserver)
+        requestNotificationPermissionIfNeeded()
     }
 
     private fun setupPlaylistBottomSheet() {
@@ -209,13 +271,39 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.onPause()
-    }
-
     override fun onDestroyView() {
+        requireActivity().lifecycle.removeObserver(activityLifecycleObserver)
+        if (playerServiceBound) {
+            requireContext().unbindService(playerServiceConnection)
+            playerServiceBound = false
+        }
+        viewModel.detachService()
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun bindPlayerService(trackJson: String) {
+        val serviceIntent = Intent(requireContext(), PlayerService::class.java).apply {
+            putExtra(Constants.TRACK, trackJson)
+        }
+        requireContext().bindService(
+            serviceIntent,
+            playerServiceConnection,
+            Context.BIND_AUTO_CREATE,
+        )
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (canShowNotification()) return
+        requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun canShowNotification(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS,
+            ) == PackageManager.PERMISSION_GRANTED
     }
 }
