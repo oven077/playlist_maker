@@ -2,9 +2,6 @@ package com.agermolin.playlistmaker.core.di
 
 import androidx.room.Room
 import com.agermolin.playlistmaker.core.data.db.AppDatabase
-import com.agermolin.playlistmaker.player.data.datasource.PlayerDataSource
-import com.agermolin.playlistmaker.player.data.repository.PlayerRepositoryImpl
-import com.agermolin.playlistmaker.player.domain.repository.PlayerRepository
 import com.agermolin.playlistmaker.search.data.api.ApiConstants
 import com.agermolin.playlistmaker.search.data.api.iTunesSearchAPI
 import com.agermolin.playlistmaker.search.data.datasource.LocalDataSource
@@ -89,15 +86,6 @@ val dataModule = module {
     
     factory<SettingsRepository> {
         SettingsRepositoryImpl(get())
-    }
-    
-    // Player Data Source and Repository
-    single<PlayerDataSource> {
-        PlayerDataSource()
-    }
-    
-    single<PlayerRepository> {
-        PlayerRepositoryImpl(get())
     }
 }
 
