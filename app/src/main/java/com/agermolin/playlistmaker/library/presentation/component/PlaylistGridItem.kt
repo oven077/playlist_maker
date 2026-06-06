@@ -54,8 +54,8 @@ fun PlaylistGridItem(
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = if (coverFile != null) ContentScale.Crop else ContentScale.Inside,
-            placeholder = painterResource(R.drawable.playlist_grid_cover_placeholder),
-            error = painterResource(R.drawable.playlist_grid_cover_placeholder),
+            placeholder = painterResource(R.drawable.track_icon),
+            error = painterResource(R.drawable.track_icon),
         )
 
         Text(
