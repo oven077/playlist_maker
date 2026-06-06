@@ -6,24 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.agermolin.playlistmaker.core.Constants
 import com.agermolin.playlistmaker.core.entity.Track
 import com.agermolin.playlistmaker.core.presentation.Event
 import com.agermolin.playlistmaker.library.domain.interactor.IAddTrackToPlaylistInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IFavoritesInteractor
 import com.agermolin.playlistmaker.library.domain.interactor.IGetPlaylistsInteractor
 import com.agermolin.playlistmaker.library.domain.model.Playlist
-import com.agermolin.playlistmaker.player.domain.interactor.IGetCurrentPositionInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.IGetPlayerStateInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.IPauseTrackInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.IPlayTrackInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.IPreparePlayerInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.IReleasePlayerInteractor
-import com.agermolin.playlistmaker.player.domain.interactor.ISetOnCompletionListenerInteractor
 import com.agermolin.playlistmaker.player.domain.model.PlayerState
+import com.agermolin.playlistmaker.player.service.PlayerServiceController
+import com.agermolin.playlistmaker.player.service.PlayerServiceState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -31,13 +24,6 @@ class PlayerViewModel(
     private val favoritesInteractor: IFavoritesInteractor,
     private val getPlaylistsInteractor: IGetPlaylistsInteractor,
     private val addTrackToPlaylistInteractor: IAddTrackToPlaylistInteractor,
-    private val preparePlayerInteractor: IPreparePlayerInteractor,
-    private val playTrackInteractor: IPlayTrackInteractor,
-    private val pauseTrackInteractor: IPauseTrackInteractor,
-    private val getPlayerStateInteractor: IGetPlayerStateInteractor,
-    private val getCurrentPositionInteractor: IGetCurrentPositionInteractor,
-    private val setOnCompletionListenerInteractor: ISetOnCompletionListenerInteractor,
-    private val releasePlayerInteractor: IReleasePlayerInteractor,
 ) : AndroidViewModel(application) {
 
     private val _screenState = MutableLiveData<PlayerScreenState>()
@@ -49,104 +35,63 @@ class PlayerViewModel(
     private val _addTrackToPlaylistEvent = MutableLiveData<Event<AddTrackToPlaylistUiEvent>>()
     val addTrackToPlaylistEvent: LiveData<Event<AddTrackToPlaylistUiEvent>> = _addTrackToPlaylistEvent
 
-    private var progressJob: Job? = null
+    private var serviceStateJob: Job? = null
+    private var playerServiceController: PlayerServiceController? = null
 
     fun initTrack(track: Track) {
         viewModelScope.launch {
             val isFavorite = favoritesInteractor.isTrackFavorite(track.trackId)
             val trackWithFavorite = track.copy(isFavorite = isFavorite)
-            _screenState.value = PlayerScreenState(
+            val currentState = _screenState.value ?: PlayerScreenState()
+            _screenState.value = currentState.copy(
                 track = trackWithFavorite,
-                isPrepared = false,
-                isPlaying = false,
-                currentPosition = 0,
-                wasPrepared = false,
-                error = null,
             )
+        }
+    }
 
-            if (trackWithFavorite.previewUrl.isNotEmpty()) {
-                preparePlayer(trackWithFavorite.previewUrl)
-            } else {
-                _screenState.value = _screenState.value?.copy(error = "Preview not available")
+    fun attachService(controller: PlayerServiceController) {
+        playerServiceController = controller
+        serviceStateJob?.cancel()
+        serviceStateJob = viewModelScope.launch {
+            controller.getPlaybackStateFlow().collect { state ->
+                applyPlaybackState(state)
             }
         }
     }
 
-    private fun preparePlayer(previewUrl: String) {
-        setOnCompletionListenerInteractor.execute {
-            progressJob?.cancel()
-            progressJob = null
-            val st = _screenState.value ?: return@execute
-            viewModelScope.launch {
-                _screenState.value = st.copy(
-                    isPrepared = true,
-                    isPlaying = false,
-                    currentPosition = 0,
-                    wasPrepared = true,
-                )
-            }
-        }
-
-        preparePlayerInteractor.execute(
-            previewUrl = previewUrl,
-            onPrepared = {
-                val st = _screenState.value ?: return@execute
-                _screenState.value = st.copy(
-                    isPrepared = true,
-                    wasPrepared = true,
-                    error = null,
-                )
-            },
-            onError = {
-                val st = _screenState.value ?: return@execute
-                _screenState.value = st.copy(isPrepared = false, error = "Failed to prepare player")
-            },
-        )
+    fun detachService() {
+        serviceStateJob?.cancel()
+        serviceStateJob = null
+        playerServiceController = null
     }
 
     fun togglePlayback() {
-        val playerState = getPlayerStateInteractor.execute()
-        val st = _screenState.value ?: return
+        val serviceController = playerServiceController ?: return
+        val playerState = serviceController.getPlayerState()
 
         when (playerState) {
-            PlayerState.PLAYING -> {
-                pause()
-            }
+            PlayerState.PLAYING -> serviceController.pause()
             PlayerState.PAUSED,
-            PlayerState.PREPARED -> {
-                if (!st.isPrepared && st.wasPrepared) {
-                    _screenState.value = st.copy(isPrepared = true)
-                }
-                play()
-            }
-            else -> {
-                if (st.track?.previewUrl != null) {
-                    preparePlayer(st.track.previewUrl)
-                }
-            }
+            PlayerState.PREPARED -> serviceController.play()
+            else -> Unit
         }
     }
 
-    private fun play() {
-        playTrackInteractor.execute()
-        _screenState.value = _screenState.value?.copy(isPlaying = true)
-        progressJob?.cancel()
-        progressJob = viewModelScope.launch {
-            while (isActive) {
-                if (getPlayerStateInteractor.execute() == PlayerState.PLAYING) {
-                    val pos = getCurrentPositionInteractor.execute()
-                    _screenState.value = _screenState.value?.copy(currentPosition = pos)
-                }
-                delay(Constants.RELOAD_PROGRESS)
-            }
+    fun onUiStarted() {
+        playerServiceController?.stopForegroundMode()
+    }
+
+    fun onUiStopped(canShowNotification: Boolean) {
+        val serviceController = playerServiceController ?: return
+        if (!canShowNotification) return
+        if (serviceController.getPlayerState() == PlayerState.PLAYING) {
+            serviceController.startForegroundMode()
         }
     }
 
-    private fun pause() {
-        pauseTrackInteractor.execute()
-        _screenState.value = _screenState.value?.copy(isPlaying = false)
-        progressJob?.cancel()
-        progressJob = null
+    fun onScreenClosed() {
+        playerServiceController?.stopForegroundMode()
+        playerServiceController?.stopPlayback()
     }
 
     fun onFavoriteClicked() {
@@ -177,14 +122,20 @@ class PlayerViewModel(
         }
     }
 
-    fun onPause() {
-        if (getPlayerStateInteractor.execute() == PlayerState.PLAYING) pause()
-    }
-
     override fun onCleared() {
         super.onCleared()
-        progressJob?.cancel()
-        releasePlayerInteractor.execute()
+        serviceStateJob?.cancel()
+    }
+
+    private fun applyPlaybackState(state: PlayerServiceState) {
+        val currentState = _screenState.value ?: PlayerScreenState()
+        _screenState.value = currentState.copy(
+            isPrepared = state.isPrepared,
+            isPlaying = state.playerState == PlayerState.PLAYING,
+            currentPosition = state.currentPosition,
+            error = state.error,
+            wasPrepared = state.wasPrepared,
+        )
     }
 }
 
