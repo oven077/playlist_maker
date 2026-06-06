@@ -4,48 +4,57 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.agermolin.playlistmaker.databinding.FragmentLibraryBinding
-import com.agermolin.playlistmaker.library.presentation.adapter.MediaLibraryPagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.navigation.fragment.findNavController
+import com.agermolin.playlistmaker.R
+import com.agermolin.playlistmaker.core.Constants
+import com.agermolin.playlistmaker.core.entity.Track
+import com.agermolin.playlistmaker.core.presentation.theme.PlaylistMakerTheme
+import com.agermolin.playlistmaker.library.domain.model.Playlist
+import com.agermolin.playlistmaker.library.presentation.screen.LibraryScreen
+import com.google.gson.Gson
 
 class LibraryFragment : Fragment() {
-
-    private var _binding: FragmentLibraryBinding? = null
-    private val binding: FragmentLibraryBinding get() = requireNotNull(_binding)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.libraryViewPager.adapter = MediaLibraryPagerAdapter(this)
-
-        TabLayoutMediator(binding.libraryTabs, binding.libraryViewPager) { tab, position ->
-            tab.setText(
-                when (position) {
-                    MediaLibraryPagerAdapter.PAGE_FAVORITES -> com.agermolin.playlistmaker.R.string.favorites_tracks
-                    MediaLibraryPagerAdapter.PAGE_PLAYLISTS -> com.agermolin.playlistmaker.R.string.playlists
-                    else -> error("Unknown tab position: $position")
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            CompositionLocalProvider(LocalViewModelStoreOwner provides this@LibraryFragment) {
+                PlaylistMakerTheme {
+                    LibraryScreen(
+                        onTrackClick = ::navigateToPlayer,
+                        onPlaylistClick = ::navigateToPlaylistDetail,
+                        onNewPlaylistClick = ::navigateToNewPlaylist,
+                    )
                 }
-            )
-        }.attach()
+            }
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun navigateToPlayer(track: Track) {
+        findNavController().navigate(
+            R.id.playerFragment,
+            bundleOf(Constants.TRACK to Gson().toJson(track)),
+        )
     }
 
-    companion object {
-        fun newInstance(): LibraryFragment = LibraryFragment()
+    private fun navigateToPlaylistDetail(playlist: Playlist) {
+        findNavController().navigate(
+            R.id.playlistDetailFragment,
+            bundleOf(Constants.PLAYLIST_ID to playlist.id),
+        )
+    }
+
+    private fun navigateToNewPlaylist() {
+        findNavController().navigate(R.id.newPlaylistFragment)
     }
 }
-
